@@ -235,4 +235,4 @@ The `events` column is semicolon-separated. Events must already exist in the dat
 
 ## License
 
-MIT
+MIT — [Fred Benenson](https://fredbenenson.com)
