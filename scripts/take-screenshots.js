@@ -5,7 +5,7 @@ const fs = require('fs');
 const BASE_URL = process.env.BASE_URL || 'http://localhost:3000';
 const INVITE_CODE = process.env.INVITE_CODE || 'SOLSTICE';
 const OUTPUT_DIR = path.join(__dirname, '..', 'docs', 'screenshots');
-const VIEWPORT = { width: 1280, height: 800 };
+const VIEWPORT = { width: 1024, height: 1400, deviceScaleFactor: 1 };
 
 const GROUPS = {
   gate: ['gate'],
