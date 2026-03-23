@@ -20,6 +20,8 @@ A complete, self-hosted wedding website you can fork and make your own. Handles 
 
 ## Screenshots
 
+![Home](docs/screenshots/home.png)
+
 ### Travel
 ![Travel](docs/screenshots/travel.png)
 
