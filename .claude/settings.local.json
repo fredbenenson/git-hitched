@@ -33,7 +33,8 @@
       "Bash(npm ls:*)",
       "Bash(node:*)",
       "Bash(open:*)",
-      "Bash(convert --version)"
+      "Bash(convert --version)",
+      "Bash(gh pr:*)"
     ]
   }
 }
