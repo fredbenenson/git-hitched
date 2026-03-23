@@ -35,7 +35,7 @@ A complete, self-hosted wedding website you can fork and make your own. Handles 
 ### Admin Dashboard
 ![Admin Dashboard](docs/screenshots/admin-dashboard.png)
 
-[View all screenshots](docs/screenshots.html) — gate, events, stay, FAQ, RSVP lookup, and the full admin panel.
+[View all screenshots](https://fredbenenson.github.io/git-hitched/screenshots.html) — gate, events, stay, FAQ, RSVP lookup, and the full admin panel.
 
 ## Stack
 
