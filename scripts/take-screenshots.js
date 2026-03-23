@@ -11,6 +11,7 @@ const GROUPS = {
   gate: ['gate'],
   pages: ['home', 'events', 'travel', 'stay', 'explore', 'attire', 'faq', 'rsvp'],
   rsvp: ['rsvp-lookup', 'rsvp-guests', 'rsvp-events'],
+  hotel: ['hotel-booking'],
 };
 
 const STATIC_PAGES = [
@@ -97,6 +98,14 @@ async function captureRsvpFlow(page) {
   await screenshot(page, 'rsvp-events');
 }
 
+async function captureHotelBooking(page) {
+  console.log('\n--- Hotel Booking ---');
+  console.log('Capturing hotel booking page...');
+  await page.goto(`${BASE_URL}/hotel_bookings/new`, { waitUntil: 'networkidle2' });
+  await new Promise(r => setTimeout(r, 1000));
+  await screenshot(page, 'hotel-booking');
+}
+
 // --- main ---
 
 async function run() {
@@ -116,6 +125,7 @@ async function run() {
   const needsAuth = [...targets].some(t => t !== 'gate');
   const needsPages = STATIC_PAGES.some(p => targets.has(p.name));
   const needsRsvp = ['rsvp-lookup', 'rsvp-guests', 'rsvp-events'].some(t => targets.has(t));
+  const needsHotel = targets.has('hotel-booking');
 
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   const browser = await puppeteer.launch({ headless: true });
@@ -140,6 +150,10 @@ async function run() {
 
   if (needsRsvp) {
     await captureRsvpFlow(page);
+  }
+
+  if (needsHotel) {
+    await captureHotelBooking(page);
   }
 
   await browser.close();

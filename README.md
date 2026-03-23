@@ -36,6 +36,9 @@ A complete, self-hosted wedding website you can fork and make your own. Handles 
 ### FAQ
 ![FAQ](docs/screenshots/faq.png)
 
+### Hotel Booking
+![Hotel Booking](docs/screenshots/hotel-booking.png)
+
 ### RSVP Lookup
 ![RSVP Lookup](docs/screenshots/rsvp-lookup.png)
 
