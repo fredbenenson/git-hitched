@@ -37,7 +37,7 @@ gem "kamal", require: false
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
 
-gem "minitest", "~> 5.25"
+gem "minitest", "~> 6.0"
 
 # Stripe for payment processing (hotel bookings, etc.)
 gem "stripe"
