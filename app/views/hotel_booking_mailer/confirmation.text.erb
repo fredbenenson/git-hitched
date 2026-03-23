@@ -1,0 +1,20 @@
+Dear <%= @booking.guest_name %>,
+
+Your hotel reservation for <%= WEDDING[:couple_names_possessive] %> wedding has been confirmed!
+
+Booking Details:
+  Confirmation #: <%= @booking.confirmation_number %>
+  Check-in:   <%= @booking.check_in.strftime("%A, %B %d, %Y") %>
+  Check-out:  <%= @booking.check_out.strftime("%A, %B %d, %Y") %>
+  Rooms:      <%= @booking.rooms %>
+  Nights:     <%= @booking.nights %>
+  Total Paid: <%= @booking.amount_display %>
+<% if @booking.notes.present? %>
+  Notes: <%= @booking.notes %>
+<% end %>
+
+If you have any questions about your reservation, please reach out to us directly.
+
+We can't wait to see you there!
+
+<%= WEDDING[:couple_names] %>

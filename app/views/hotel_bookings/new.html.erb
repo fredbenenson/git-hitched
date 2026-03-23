@@ -1,0 +1,122 @@
+<div data-controller="appear hotel-booking">
+  <h1 class="type-serif-heading text-center animate-fade-in-up" style="font-size: var(--text-3xl); margin-bottom: var(--space-4);">Book Your Hotel Room</h1>
+  <p class="text-center animate-fade-in-up delay-1" style="color: var(--color-text-secondary); margin-bottom: var(--space-8); max-width: 36rem; margin-left: auto; margin-right: auto;">
+    We've reserved a block of rooms for our guests. Fill out the form below to reserve yours and pay securely via Stripe.
+  </p>
+
+  <div class="card appear" style="max-width: 32rem; margin: 0 auto var(--space-6); overflow: hidden;">
+    <div data-controller="carousel" style="position: relative; margin: calc(-1 * var(--space-8)); margin-bottom: 0;">
+      <div data-carousel-target="slide">
+        <%= image_tag "hotel.webp", alt: "Hotel", style: "width: 100%; height: 240px; object-fit: cover; display: block;" %>
+      </div>
+      <button data-action="click->carousel#prev" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.7); color: #555; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; font-size: 14px; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.15);">&#10094;</button>
+      <button data-action="click->carousel#next" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.7); color: #555; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; font-size: 14px; line-height: 1; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.15);">&#10095;</button>
+      <span data-carousel-target="counter" style="position: absolute; bottom: 8px; right: 12px; background: rgba(0,0,0,0.5); color: white; font-size: 12px; padding: 2px 8px; border-radius: 10px;"></span>
+    </div>
+    <div style="padding-top: var(--space-4);">
+      <h2 class="type-serif-heading" style="font-size: var(--text-xl); margin-bottom: var(--space-2);">The Grandview Hotel &amp; Spa</h2>
+      <p style="color: var(--color-text-muted); font-size: var(--text-sm); margin-bottom: var(--space-3);">123 Main Street, Buttersville</p>
+      <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-3);">
+        <span>Pool</span>
+        <span>Restaurant</span>
+        <span>Free WiFi</span>
+        <span>Parking</span>
+      </div>
+      <p style="font-size: var(--text-sm); color: var(--color-text-primary); font-weight: 600; margin-bottom: var(--space-2);">$<%= HotelBooking::NIGHTLY_RATE_CENTS / 100 %>/night &middot; Double room for two with breakfast included.</p>
+      <p style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: 0;">Nestled in the heart of Buttersville, the Grandview Hotel &amp; Spa offers luxurious accommodations just minutes from the venue. Each room features plush bedding, a rain shower, and views of the surrounding countryside. Guests enjoy complimentary breakfast, an outdoor swimming pool, and on-site parking. The hotel's award-winning restaurant serves locally sourced cuisine, and the full-service spa is the perfect way to unwind before or after the celebration.</p>
+    </div>
+  </div>
+
+  <div class="card appear" style="max-width: 32rem; margin: 0 auto;">
+    <div class="card-body">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+        <p style="color: var(--color-text-primary); font-size: var(--text-lg); font-weight: 600; margin: 0;">Reservation</p>
+        <% if @rooms_available > 0 %>
+          <span style="background: var(--color-accent); color: white; font-size: var(--text-xs); font-weight: 600; padding: 2px 10px; border-radius: 999px;"><%= @rooms_available %> room<%= 's' unless @rooms_available == 1 %> left</span>
+        <% else %>
+          <span style="background: var(--color-text-muted); color: white; font-size: var(--text-xs); font-weight: 600; padding: 2px 10px; border-radius: 999px;">Sold out</span>
+        <% end %>
+      </div>
+
+      <% if @rooms_available <= 0 %>
+        <p style="color: var(--color-text-secondary); text-align: center; padding: var(--space-4) 0;">All rooms have been booked. If a room becomes available, it will appear here.</p>
+      <% else %>
+      <%= form_with model: @booking, url: hotel_bookings_path, method: :post, class: "space-y-4", data: { turbo: false } do |f| %>
+        <%= f.hidden_field :check_in, value: @booking.check_in, data: { hotel_booking_target: "checkIn" } %>
+        <%= f.hidden_field :check_out, value: @booking.check_out, data: { hotel_booking_target: "checkOut" } %>
+
+        <div>
+          <label class="form-label">Full Name</label>
+          <%= f.text_field :guest_name,
+            placeholder: "Your name as it appears on the invite",
+            class: "form-input",
+            required: true,
+            autocomplete: "name" %>
+        </div>
+
+        <div>
+          <label class="form-label">Email</label>
+          <%= f.email_field :email,
+            placeholder: "you@example.com",
+            class: "form-input",
+            required: true,
+            autocomplete: "email" %>
+        </div>
+
+        <div>
+          <label class="form-label">Confirm Email</label>
+          <%= f.email_field :email_confirmation,
+            placeholder: "you@example.com",
+            class: "form-input",
+            required: true,
+            autocomplete: "off" %>
+        </div>
+
+        <div>
+          <label class="form-label">Phone Number</label>
+          <%= f.telephone_field :phone,
+            placeholder: "+1 (555) 123-4567",
+            class: "form-input",
+            required: true,
+            autocomplete: "tel" %>
+        </div>
+
+        <div>
+          <label class="form-label">Number of Rooms</label>
+          <%= f.select :rooms, (1..5).map { |n| ["#{n} room#{'s' if n > 1}", n] },
+            {},
+            class: "form-input",
+            data: { hotel_booking_target: "rooms", action: "change->hotel-booking#calculate" } %>
+        </div>
+
+        <div>
+          <label class="form-label">Notes <span style="color: var(--color-text-muted);">(optional)</span></label>
+          <%= f.text_area :notes,
+            placeholder: "Any special requests or preferences",
+            class: "form-input",
+            rows: 3 %>
+        </div>
+
+        <div data-hotel-booking-target="summary" style="background: var(--color-bg-tertiary); border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4); display: none;">
+          <p style="margin: 0; color: var(--color-text-secondary); font-size: var(--text-sm);">
+            <span data-hotel-booking-target="nights">0</span> night(s) &times;
+            <span data-hotel-booking-target="roomCount">1</span> room(s) &times;
+            $<%= HotelBooking::NIGHTLY_RATE_CENTS / 100 %>/night
+          </p>
+          <p style="margin: var(--space-1) 0 0; font-size: var(--text-lg); font-weight: 600; color: var(--color-text-highlight);">
+            Total: $<span data-hotel-booking-target="total">0</span>
+          </p>
+        </div>
+
+        <button type="submit"
+          class="btn btn-highlight btn-lg w-full"
+          style="margin-top: var(--space-4);">Continue to Payment</button>
+      <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <p class="text-center appear appear-delay-1" style="color: var(--color-text-muted); font-size: var(--text-sm); margin-top: var(--space-6);">
+    Payments are processed securely by Stripe. You will receive a confirmation email after payment.
+  </p>
+</div>

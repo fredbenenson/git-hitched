@@ -1,0 +1,61 @@
+<div class="text-center" data-controller="appear">
+  <% if @booking.confirmed? %>
+    <h1 class="type-serif-heading animate-fade-in-up" style="font-size: var(--text-3xl); margin-bottom: var(--space-4);">Booking Confirmed</h1>
+    <p class="animate-fade-in-up delay-1" style="color: var(--color-text-secondary); margin-bottom: var(--space-8);">
+      Thank you, <%= @booking.guest_name %>! Your hotel reservation is confirmed.
+    </p>
+
+    <div class="card appear" style="max-width: 28rem; margin: 0 auto; text-align: left;">
+      <div class="card-body">
+        <h3 class="card-title" style="font-size: var(--text-lg); margin-bottom: var(--space-4);">Reservation Details</h3>
+
+        <div class="space-y-2" style="font-size: var(--text-sm);">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--color-text-muted);">Confirmation #</span>
+            <span style="color: var(--color-text-highlight); font-weight: 600;"><%= @booking.confirmation_number %></span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--color-text-muted);">Guest</span>
+            <span style="color: var(--color-text-highlight);"><%= @booking.guest_name %></span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--color-text-muted);">Check-in</span>
+            <span style="color: var(--color-text-highlight);"><%= @booking.check_in.strftime("%b %d, %Y") %></span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--color-text-muted);">Check-out</span>
+            <span style="color: var(--color-text-highlight);"><%= @booking.check_out.strftime("%b %d, %Y") %></span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--color-text-muted);">Rooms</span>
+            <span style="color: var(--color-text-highlight);"><%= @booking.rooms %></span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--color-text-muted);">Nights</span>
+            <span style="color: var(--color-text-highlight);"><%= @booking.nights %></span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding-top: var(--space-2); border-top: 1px solid var(--color-border-light);">
+            <span style="color: var(--color-text-highlight); font-weight: 600;">Total Paid</span>
+            <span style="color: var(--color-text-highlight); font-weight: 600;"><%= @booking.amount_display %></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="appear appear-delay-1" style="color: var(--color-text-muted); font-size: var(--text-sm); margin-top: var(--space-6);">
+      A confirmation email has been sent to <strong><%= @booking.email %></strong>.
+    </p>
+  <% else %>
+    <h1 class="type-serif-heading animate-fade-in-up" style="font-size: var(--text-3xl); margin-bottom: var(--space-4);">Payment Processing</h1>
+    <p class="animate-fade-in-up delay-1" style="color: var(--color-text-secondary); margin-bottom: var(--space-8);">
+      Your payment is still being processed. You'll receive a confirmation email at <strong><%= @booking.email %></strong> once it's complete.
+    </p>
+    <p style="color: var(--color-text-muted); font-size: var(--text-sm);">
+      This usually takes just a moment. If you don't receive an email within a few minutes, please contact us.
+    </p>
+  <% end %>
+
+  <div style="margin-top: var(--space-6);">
+    <%= link_to "Back to Home", root_path, class: "btn btn-highlight" %>
+  </div>
+</div>

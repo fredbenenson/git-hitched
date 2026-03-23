@@ -1,0 +1,41 @@
+<p>Dear <%= @booking.guest_name %>,</p>
+
+<p>Your hotel reservation for <%= WEDDING[:couple_names_possessive] %> wedding has been confirmed! Here are your booking details:</p>
+
+<div class="event-card">
+  <table class="rsvp-table">
+    <tr>
+      <td>Confirmation #</td>
+      <td><strong><%= @booking.confirmation_number %></strong></td>
+    </tr>
+    <tr>
+      <td>Check-in</td>
+      <td><strong><%= @booking.check_in.strftime("%A, %B %d, %Y") %></strong></td>
+    </tr>
+    <tr>
+      <td>Check-out</td>
+      <td><strong><%= @booking.check_out.strftime("%A, %B %d, %Y") %></strong></td>
+    </tr>
+    <tr>
+      <td>Rooms</td>
+      <td><strong><%= @booking.rooms %></strong></td>
+    </tr>
+    <tr>
+      <td>Nights</td>
+      <td><strong><%= @booking.nights %></strong></td>
+    </tr>
+    <tr>
+      <td>Total Paid</td>
+      <td><strong><%= @booking.amount_display %></strong></td>
+    </tr>
+  </table>
+  <% if @booking.notes.present? %>
+    <p class="meal-info">Notes: <%= @booking.notes %></p>
+  <% end %>
+</div>
+
+<p>If you have any questions about your reservation, please reach out to us directly.</p>
+
+<p>We can't wait to see you there!</p>
+
+<p><%= WEDDING[:couple_names] %></p>

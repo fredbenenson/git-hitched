@@ -1,0 +1,16 @@
+Dear <%= @booking.guest_name %>,
+
+Your hotel reservation for <%= WEDDING[:couple_names_possessive] %> wedding has been refunded.
+
+Refund Details:
+  Confirmation #: <%= @booking.confirmation_number %>
+  Check-in:       <%= @booking.check_in.strftime("%A, %B %d, %Y") %>
+  Check-out:      <%= @booking.check_out.strftime("%A, %B %d, %Y") %>
+  Rooms:          <%= @booking.rooms %>
+  Refund Amount:  <%= @booking.amount_display %>
+
+The full amount of <%= @booking.amount_display %> will be returned to your original payment method. Please allow 5-10 business days for the refund to appear on your statement.
+
+If you have any questions, please reach out to us directly.
+
+<%= WEDDING[:couple_names] %>

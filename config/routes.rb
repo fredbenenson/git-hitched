@@ -25,6 +25,17 @@ Rails.application.routes.draw do
   get "our-story",   to: "pages#our_story"
   get "gallery",     to: "pages#gallery"
 
+  # Hotel bookings
+  resources :hotel_bookings, only: [ :new, :create ] do
+    member do
+      get "success", to: "hotel_bookings#success", as: :success
+      get "cancel",  to: "hotel_bookings#cancel",  as: :cancel
+    end
+  end
+
+  # Stripe webhooks
+  post "stripe/webhooks", to: "stripe_webhooks#create"
+
   # Legacy redirect
   get "details", to: redirect("/events")
 
@@ -38,6 +49,9 @@ Rails.application.routes.draw do
     resources :invites
     resources :guests
     resources :events
+    resources :hotel_bookings, only: [ :index ] do
+      post :refund, on: :member
+    end
     post "export",           to: "dashboard#export",           as: :export
     post "send_invitations", to: "dashboard#send_invitations", as: :send_invitations
     post "send_reminders",   to: "dashboard#send_reminders",   as: :send_reminders

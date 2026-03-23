@@ -37,6 +37,7 @@
           <%= link_to "Explore", explore_path, class: "type-serif-small" if page_enabled?(:explore) %>
           <%= link_to "Attire", attire_path, class: "type-serif-small" if page_enabled?(:attire) %>
           <%= link_to "FAQ", faq_path, class: "type-serif-small" if page_enabled?(:faq) %>
+          <%= link_to "Hotel", new_hotel_booking_path, class: "type-serif-small" if page_enabled?(:hotel) %>
           <%= link_to "RSVP", rsvp_path, class: "btn btn-highlight", style: "margin-left: var(--space-4);" if page_enabled?(:rsvp) %>
         </div>
       </div>

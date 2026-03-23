@@ -2,6 +2,7 @@ class Invite < ApplicationRecord
   has_many :guests, dependent: :destroy
   has_many :event_invites, dependent: :destroy
   has_many :events, through: :event_invites
+  has_many :hotel_bookings, dependent: :destroy
   accepts_nested_attributes_for :guests, allow_destroy: true
 
   validates :name, presence: true

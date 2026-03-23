@@ -7,7 +7,11 @@ class ApplicationController < ActionController::Base
 
   def page_enabled?(page)
     return true if Rails.env.development? && session[:dev_show_all_pages]
-    PAGES_CONFIG.fetch(page.to_s, true)
+    pages_config.fetch(page.to_s, true)
+  end
+
+  def pages_config
+    PAGES_CONFIG
   end
 
   private
@@ -15,6 +19,7 @@ class ApplicationController < ActionController::Base
   def require_invite_code
     return if session[:site_authenticated]
 
+    session[:return_to] = request.fullpath
     redirect_to gate_path
   end
 

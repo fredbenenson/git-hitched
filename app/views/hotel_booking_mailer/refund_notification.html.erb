@@ -1,0 +1,34 @@
+<p>Dear <%= @booking.guest_name %>,</p>
+
+<p>Your hotel reservation for <%= WEDDING[:couple_names_possessive] %> wedding has been refunded. Here are the details:</p>
+
+<div class="event-card">
+  <table class="rsvp-table">
+    <tr>
+      <td>Confirmation #</td>
+      <td><strong><%= @booking.confirmation_number %></strong></td>
+    </tr>
+    <tr>
+      <td>Check-in</td>
+      <td><strong><%= @booking.check_in.strftime("%A, %B %d, %Y") %></strong></td>
+    </tr>
+    <tr>
+      <td>Check-out</td>
+      <td><strong><%= @booking.check_out.strftime("%A, %B %d, %Y") %></strong></td>
+    </tr>
+    <tr>
+      <td>Rooms</td>
+      <td><strong><%= @booking.rooms %></strong></td>
+    </tr>
+    <tr>
+      <td>Refund Amount</td>
+      <td><strong><%= @booking.amount_display %></strong></td>
+    </tr>
+  </table>
+</div>
+
+<p>The full amount of <%= @booking.amount_display %> will be returned to your original payment method. Please allow 5&ndash;10 business days for the refund to appear on your statement.</p>
+
+<p>If you have any questions, please reach out to us directly.</p>
+
+<p><%= WEDDING[:couple_names] %></p>

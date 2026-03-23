@@ -18,11 +18,17 @@
       <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
         <div class="flex items-center gap-6">
           <span class="type-serif-heading" style="font-size: var(--text-lg);">Wedding Admin</span>
-          <div class="flex gap-4">
+          <div class="flex gap-4 items-center">
             <%= link_to "Dashboard", admin_root_path, class: "type-serif-small" %>
+            <span style="color: var(--color-text-muted);">&middot;</span>
             <%= link_to "Invites", admin_invites_path, class: "type-serif-small" %>
+            <span style="color: var(--color-text-muted);">&middot;</span>
             <%= link_to "Guests", admin_guests_path, class: "type-serif-small" %>
+            <span style="color: var(--color-text-muted);">&middot;</span>
             <%= link_to "Events", admin_events_path, class: "type-serif-small" %>
+            <span style="color: var(--color-text-muted);">&middot;</span>
+            <%= link_to "Hotel Bookings", admin_hotel_bookings_path, class: "type-serif-small" %>
+            <span style="color: var(--color-text-muted);">&middot;</span>
             <%= link_to "Import CSV", admin_import_path, class: "type-serif-small" %>
           </div>
         </div>

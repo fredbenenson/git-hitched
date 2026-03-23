@@ -1,0 +1,11 @@
+New hotel booking confirmed!
+
+Confirmation #: <%= @booking.confirmation_number %>
+Guest:  <%= @booking.guest_name %>
+Email:  <%= @booking.email %>
+Phone:  <%= @booking.phone %>
+Rooms:  <%= @booking.rooms %>
+Nights: <%= @booking.nights %>
+Amount: <%= @booking.amount_display %>
+
+Rooms remaining: <%= HotelBooking.rooms_available %> of <%= HotelBooking::TOTAL_ROOMS %>

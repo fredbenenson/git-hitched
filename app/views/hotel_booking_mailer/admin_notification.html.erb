@@ -1,0 +1,34 @@
+<p>New hotel booking confirmed!</p>
+
+<table class="rsvp-table">
+  <tr>
+    <td>Confirmation #</td>
+    <td><strong><%= @booking.confirmation_number %></strong></td>
+  </tr>
+  <tr>
+    <td>Guest</td>
+    <td><strong><%= @booking.guest_name %></strong></td>
+  </tr>
+  <tr>
+    <td>Email</td>
+    <td><strong><%= @booking.email %></strong></td>
+  </tr>
+  <tr>
+    <td>Phone</td>
+    <td><strong><%= @booking.phone %></strong></td>
+  </tr>
+  <tr>
+    <td>Rooms</td>
+    <td><strong><%= @booking.rooms %></strong></td>
+  </tr>
+  <tr>
+    <td>Nights</td>
+    <td><strong><%= @booking.nights %></strong></td>
+  </tr>
+  <tr>
+    <td>Amount</td>
+    <td><strong><%= @booking.amount_display %></strong></td>
+  </tr>
+</table>
+
+<p>Rooms remaining: <strong><%= HotelBooking.rooms_available %></strong> of <%= HotelBooking::TOTAL_ROOMS %></p>

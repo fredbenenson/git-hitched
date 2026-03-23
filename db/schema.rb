@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_13_132157) do
+ActiveRecord::Schema[8.0].define(version: 2026_03_23_155929) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -58,6 +58,29 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_13_132157) do
     t.index ["invite_id"], name: "index_guests_on_invite_id"
   end
 
+  create_table "hotel_bookings", force: :cascade do |t|
+    t.bigint "invite_id", null: false
+    t.string "guest_name", null: false
+    t.string "email", null: false
+    t.string "phone"
+    t.date "check_in", null: false
+    t.date "check_out", null: false
+    t.integer "rooms", default: 1, null: false
+    t.integer "amount_cents", null: false
+    t.string "currency", default: "usd", null: false
+    t.string "stripe_checkout_session_id"
+    t.string "stripe_payment_intent_id"
+    t.string "status", default: "pending", null: false
+    t.text "notes"
+    t.datetime "confirmed_at"
+    t.datetime "refunded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invite_id"], name: "index_hotel_bookings_on_invite_id"
+    t.index ["status"], name: "index_hotel_bookings_on_status"
+    t.index ["stripe_checkout_session_id"], name: "index_hotel_bookings_on_stripe_checkout_session_id", unique: true
+  end
+
   create_table "invites", force: :cascade do |t|
     t.string "name", null: false
     t.string "email"
@@ -83,6 +106,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_13_132157) do
   add_foreign_key "event_invites", "events"
   add_foreign_key "event_invites", "invites"
   add_foreign_key "guests", "invites"
+  add_foreign_key "hotel_bookings", "invites"
   add_foreign_key "rsvps", "events"
   add_foreign_key "rsvps", "guests"
 end

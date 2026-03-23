@@ -1,0 +1,89 @@
+<h1 class="type-serif-heading" style="font-size: var(--text-3xl); margin-bottom: var(--space-6);">Hotel Bookings</h1>
+
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+  <div class="stat-card">
+    <p class="stat-label">Confirmed</p>
+    <p class="stat-value text-success"><%= @confirmed_count %></p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Pending</p>
+    <p class="stat-value text-muted"><%= @pending_count %></p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Refunded</p>
+    <p class="stat-value text-error"><%= @refunded_count %></p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Total Rooms</p>
+    <p class="stat-value"><%= @total_rooms %></p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Revenue</p>
+    <p class="stat-value">$<%= format("%.2f", @total_revenue / 100.0) %></p>
+  </div>
+</div>
+
+<% if @bookings.any? %>
+  <div class="table-wrapper">
+    <table style="width: 100%;">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Guest</th>
+          <th>Invite</th>
+          <th>Phone</th>
+          <th class="text-center">Rooms</th>
+          <th class="text-right">Amount</th>
+          <th class="text-center">Status</th>
+          <th>Booked</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @bookings.each do |booking| %>
+          <tr>
+            <td class="text-muted" style="font-size: var(--text-xs); font-weight: 600;"><%= booking.confirmation_number %></td>
+            <td>
+              <strong><%= booking.guest_name %></strong>
+              <br><span class="text-muted" style="font-size: var(--text-xs);"><%= booking.email %></span>
+            </td>
+            <td><%= link_to booking.invite.name, admin_invite_path(booking.invite) %></td>
+            <td class="text-muted" style="font-size: var(--text-xs);"><%= booking.phone %></td>
+            <td class="text-center"><%= booking.rooms %></td>
+            <td class="text-right"><%= booking.amount_display %></td>
+            <td class="text-center">
+              <% if booking.confirmed? %>
+                <span class="text-success" style="font-weight: 600;">Confirmed</span>
+              <% elsif booking.refunded? %>
+                <span class="text-error" style="font-weight: 600;">Refunded</span>
+                <% if booking.refunded_at %>
+                  <br><span class="text-muted" style="font-size: var(--text-xs);"><%= booking.refunded_at.strftime("%b %d, %Y") %></span>
+                <% end %>
+              <% else %>
+                <span class="text-muted" style="font-style: italic;">Pending</span>
+              <% end %>
+            </td>
+            <td class="text-muted"><%= booking.created_at.strftime("%b %d, %Y") %></td>
+            <td>
+              <% if booking.confirmed? %>
+                <%= button_to "Refund", refund_admin_hotel_booking_path(booking),
+                  method: :post,
+                  style: "background: none; color: var(--color-error); border: none; font-size: var(--text-xs); padding: 0; cursor: pointer; text-decoration: underline; font-family: inherit;",
+                  data: { turbo_confirm: "Refund #{booking.amount_display} to #{booking.guest_name}? This will issue a full refund via Stripe." } %>
+              <% end %>
+            </td>
+          </tr>
+          <% if booking.notes.present? %>
+            <tr>
+              <td colspan="9" style="padding-top: 4px; padding-bottom: 8px; border-top: none;">
+                <span class="text-muted" style="font-size: var(--text-xs); font-style: italic;">Notes: <%= booking.notes %></span>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-muted">No hotel bookings yet.</p>
+<% end %>
