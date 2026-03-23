@@ -2,6 +2,8 @@
 
 A complete, self-hosted wedding website you can fork and make your own. Handles everything from save-the-dates to day-of logistics: a gated site with a shared invite code, household-based RSVPs across multiple events, meal and dietary tracking, childcare coordination, hotel room blocks with Stripe checkout, automated email notifications, and a full admin dashboard to manage it all. Built with Ruby on Rails 8, Hotwire, Tailwind CSS, and [Claude Code](https://claude.ai/claude-code).
 
+![Home](docs/screenshots/home.png)
+
 ## Features at a Glance
 
 - **Site gate** — Visitors enter a shared invite code before seeing anything. One password for the whole site, set via environment variable.
@@ -18,12 +20,20 @@ A complete, self-hosted wedding website you can fork and make your own. Handles 
 
 ## Screenshots
 
-| | | |
-|---|---|---|
-| ![Home](docs/screenshots/home.png) | ![Travel](docs/screenshots/travel.png) | ![Hotel Booking](docs/screenshots/hotel-booking.png) |
-| Home | Travel | Hotel Booking |
-| ![RSVP Guest Details](docs/screenshots/rsvp-guests.png) | ![RSVP Events](docs/screenshots/rsvp-events.png) | ![Admin Dashboard](docs/screenshots/admin-dashboard.png) |
-| RSVP Guest Details | RSVP Event Selection | Admin Dashboard |
+### Travel
+![Travel](docs/screenshots/travel.png)
+
+### Hotel Booking
+![Hotel Booking](docs/screenshots/hotel-booking.png)
+
+### RSVP Guest Details
+![RSVP Guest Details](docs/screenshots/rsvp-guests.png)
+
+### RSVP Event Selection
+![RSVP Events](docs/screenshots/rsvp-events.png)
+
+### Admin Dashboard
+![Admin Dashboard](docs/screenshots/admin-dashboard.png)
 
 [View all screenshots](docs/screenshots.html) — gate, events, stay, FAQ, RSVP lookup, and the full admin panel.
 
