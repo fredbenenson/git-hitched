@@ -2,6 +2,7 @@ class Event < ApplicationRecord
   has_many :event_invites, dependent: :destroy
   has_many :invites, through: :event_invites
   has_many :rsvps, dependent: :destroy
+  has_many :seating_tables, dependent: :destroy
 
   validates :name, presence: true
 

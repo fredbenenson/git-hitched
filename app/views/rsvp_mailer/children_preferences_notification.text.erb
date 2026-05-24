@@ -1,0 +1,11 @@
+Children's preferences from <%= @invite.name %> — <%= @children_names %>.
+
+<% @children.each do |child| -%>
+<%= child.full_name %>
+<% notes = [] -%>
+<% notes << "Age #{child.age}" if child.age.present? -%>
+<% notes << (child.needs_highchair? ? "Highchair: yes" : "Highchair: no") -%>
+<% notes << "Reception seating: #{child.reception_seating.to_s.titleize}" if child.reception_seating.present? -%>
+<%= notes.join(" · ") %>
+
+<% end -%>

@@ -1,0 +1,20 @@
+New RSVP from <%= @invite.name %> — <%= @invite.attending? ? "Attending" : "Declined" %>.
+
+<% @guests.each do |guest| -%>
+<%= guest.full_name %>
+<% @events.each do |event| -%>
+<% rsvp = guest.rsvp_for(event) -%>
+  <%= event.name %>: <%= rsvp&.attending == true ? "Attending" : (rsvp&.attending == false ? "Declined" : "Pending") %>
+<% end -%>
+<% notes = [] -%>
+<% notes << "Meal: #{guest.meal_choice.titleize}" if guest.meal_choice.present? && guest.meal_choice != "tbd" -%>
+<% notes << "Dietary notes: #{guest.dietary_notes}" if guest.dietary_notes.present? -%>
+<% notes << "Needs childcare" if guest.needs_childcare? -%>
+<% notes << "Highchair requested" if guest.is_child? && guest.needs_highchair? -%>
+<% notes << "Reception seating: #{guest.reception_seating.to_s.titleize}" if guest.is_child? -%>
+<%= notes.join(" · ") if notes.any? %>
+
+<% end -%>
+<% if @invite.notes.present? -%>
+Notes: <%= @invite.notes %>
+<% end -%>

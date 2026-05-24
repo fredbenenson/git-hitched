@@ -1,0 +1,44 @@
+<%# Right-rail list of attending guests who do not yet have a seat.
+    Grouped by linked-invite so families read together.
+    Local: groups (array of { id:, invite_name:, rsvps: }) %>
+<aside class="seating-rail" id="seating_unseated_rail" data-drop-target="unseated">
+  <header class="seating-rail__header">
+    <h2 class="seating-rail__title">Unseated</h2>
+    <span class="seating-rail__count"><%= groups.sum { |g| g[:rsvps].size } %></span>
+  </header>
+
+  <% if groups.empty? %>
+    <p class="seating-rail__empty">Everyone has a seat.</p>
+  <% else %>
+    <ul class="seating-rail__list">
+      <% groups.each do |group| %>
+        <% if group[:rsvps].size == 1 %>
+          <% rsvp = group[:rsvps].first %>
+          <li class="seating-rail__group seating-rail__group--solo">
+            <ul class="seating-rail__chips">
+              <li class="seating-rail__chip"
+                  draggable="true"
+                  data-rsvp-id="<%= rsvp.id %>"
+                  data-group-id="<%= group[:id] %>">
+                <%= rsvp.guest.first_name %><% if rsvp.guest.last_name.present? %> <%= rsvp.guest.last_name.first %>.<% end %>
+              </li>
+            </ul>
+          </li>
+        <% else %>
+          <li class="seating-rail__group">
+            <ul class="seating-rail__chips">
+              <% group[:rsvps].each do |rsvp| %>
+                <li class="seating-rail__chip"
+                    draggable="true"
+                    data-rsvp-id="<%= rsvp.id %>"
+                    data-group-id="<%= group[:id] %>">
+                  <%= rsvp.guest.first_name %><% if rsvp.guest.last_name.present? %> <%= rsvp.guest.last_name.first %>.<% end %>
+                </li>
+              <% end %>
+            </ul>
+          </li>
+        <% end %>
+      <% end %>
+    </ul>
+  <% end %>
+</aside>

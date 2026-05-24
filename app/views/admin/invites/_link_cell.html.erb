@@ -1,0 +1,28 @@
+<td id="<%= dom_id(invite, :link_cell) %>" style="position: relative;">
+  <% if invite.linked_invite %>
+    <div style="display: flex; align-items: center; gap: var(--space-2);">
+      <span style="font-size: var(--text-sm);">→ <%= invite.linked_invite.name %></span>
+      <button type="button"
+              data-controller="linked-invite"
+              data-linked-invite-invite-id-value="<%= invite.id %>"
+              data-linked-invite-link-url-template-value="<%= link_admin_invite_path(":id") %>"
+              data-action="click->linked-invite#unlink"
+              style="background: none; border: none; cursor: pointer; color: var(--color-text-muted); font-size: var(--text-sm); padding: 0 var(--space-1);"
+              title="Unlink">×</button>
+    </div>
+  <% else %>
+    <div data-controller="linked-invite"
+         data-linked-invite-invite-id-value="<%= invite.id %>"
+         data-linked-invite-search-url-value="<%= search_admin_invites_path %>"
+         data-linked-invite-link-url-template-value="<%= link_admin_invite_path(":id") %>">
+      <input type="text"
+             data-linked-invite-target="input"
+             data-action="input->linked-invite#search focus->linked-invite#search"
+             placeholder="Search to link…"
+             class="form-input"
+             style="font-size: var(--text-sm); padding: var(--space-1) var(--space-2); width: 100%;" />
+      <div data-linked-invite-target="results"
+           style="display: none; position: fixed; z-index: 1000; background: var(--color-bg-input); border: 1px solid var(--color-border-light); border-radius: var(--radius-sm); max-height: 240px; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.18);"></div>
+    </div>
+  <% end %>
+</td>

@@ -1,0 +1,11 @@
+<p>Hi <%= @invite.name %>,</p>
+
+<p>We've arranged a dedicated nanny and children's care team to look after the little ones throughout the celebrations, so you can be fully present.</p>
+
+<p>At both dinner events, children may either be seated with their parents or join the supervised children's area with the nanny team. If <%= @children_names %> would like a highchair, please let us know in advance so we can arrange it.</p>
+
+<p>Please use the button below to let us know each child's preferences:</p>
+
+<div class="btn-wrapper">
+  <a href="<%= @preferences_url %>" class="btn">Share <%= @children_names %>'s Preferences</a>
+</div>

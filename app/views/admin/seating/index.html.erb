@@ -1,0 +1,42 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag "seating", "data-turbo-track": "reload" %>
+<% end %>
+
+<div class="flex items-center justify-between mb-6">
+  <h1 class="type-serif-heading" style="font-size: var(--text-3xl);">Seating</h1>
+  <%= link_to "Download Excel (per event)", admin_seating_xlsx_export_path, class: "btn btn-secondary" %>
+</div>
+
+<% if @events.empty? %>
+  <p class="text-muted">No events have seating tables configured yet.</p>
+<% else %>
+  <div class="grid grid-cols-2 gap-4">
+    <% @events.each do |event| %>
+      <% tables = event.seating_tables.ordered.to_a %>
+      <% seats = tables.sum(&:seat_count) %>
+      <% assigned = SeatAssignment.joins(:seating_table).where(seating_tables: { event_id: event.id }).count %>
+      <% attending = event.rsvps.where(attending: true).count %>
+      <%= link_to admin_event_seating_path(event), class: "card", style: "padding: var(--space-6); text-decoration: none; color: inherit; display: block;" do %>
+        <p class="type-serif-small text-muted" style="margin-bottom: 4px;"><%= event.date&.strftime("%A, %B %-d, %Y") %></p>
+        <h2 class="card-title" style="margin-bottom: var(--space-3);"><%= event.name %></h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-3);">
+          <div>
+            <p class="text-muted" style="font-size: var(--text-xs); margin: 0;">Tables</p>
+            <p style="font-size: var(--text-xl); margin: 0;"><%= tables.count %></p>
+          </div>
+          <div>
+            <p class="text-muted" style="font-size: var(--text-xs); margin: 0;">Seats</p>
+            <p style="font-size: var(--text-xl); margin: 0;"><%= seats %></p>
+          </div>
+          <div>
+            <p class="text-muted" style="font-size: var(--text-xs); margin: 0;">Attending</p>
+            <p style="font-size: var(--text-xl); margin: 0;"><%= attending %></p>
+          </div>
+        </div>
+        <p class="text-muted" style="font-size: var(--text-xs); margin-top: var(--space-3); margin-bottom: 0;">
+          <%= assigned %> of <%= attending %> assigned
+        </p>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

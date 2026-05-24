@@ -1,0 +1,11 @@
+<% @affected_tables.each do |table| %>
+  <%= turbo_stream.replace "seating_table_#{table.id}" do %>
+    <%= render "admin/seating/table", table: table %>
+  <% end %>
+<% end %>
+
+<% if @unseated_groups %>
+  <%= turbo_stream.replace "seating_unseated_rail" do %>
+    <%= render "admin/seating/unseated_rail", groups: @unseated_groups %>
+  <% end %>
+<% end %>

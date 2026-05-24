@@ -13,7 +13,7 @@ const GROUPS = {
   pages: ['home', 'events', 'travel', 'stay', 'explore', 'attire', 'faq', 'rsvp'],
   rsvp: ['rsvp-lookup', 'rsvp-guests', 'rsvp-events'],
   hotel: ['hotel-booking'],
-  admin: ['admin-dashboard', 'admin-invites', 'admin-guests', 'admin-events', 'admin-hotel-bookings', 'admin-import'],
+  admin: ['admin-dashboard', 'admin-invites', 'admin-guests', 'admin-children', 'admin-events', 'admin-seating', 'admin-seating-chart', 'admin-emails', 'admin-hotel-bookings', 'admin-import'],
 };
 
 const STATIC_PAGES = [
@@ -143,7 +143,10 @@ const ADMIN_PAGES = [
   { name: 'admin-dashboard', path: '/admin', description: 'Admin dashboard' },
   { name: 'admin-invites', path: '/admin/invites', description: 'Admin invites' },
   { name: 'admin-guests', path: '/admin/guests', description: 'Admin guests' },
+  { name: 'admin-children', path: '/admin/children', description: 'Admin children dashboard' },
   { name: 'admin-events', path: '/admin/events', description: 'Admin events' },
+  { name: 'admin-seating', path: '/admin/seating', description: 'Admin seating (per event)' },
+  { name: 'admin-emails', path: '/admin/emails', description: 'Admin emails / communications' },
   { name: 'admin-hotel-bookings', path: '/admin/hotel_bookings', description: 'Admin hotel bookings' },
   { name: 'admin-import', path: '/admin/import', description: 'Admin CSV import' },
 ];
@@ -163,6 +166,49 @@ async function captureAdmin(page) {
   }
 
   // Clear the auth header
+  await page.setExtraHTTPHeaders({});
+}
+
+async function captureSeatingChart(page) {
+  console.log('\n--- Seating floorplan ---');
+  const authHeader = 'Basic ' + Buffer.from(`${ADMIN_USER}:${ADMIN_PASSWORD}`).toString('base64');
+  await page.setExtraHTTPHeaders({ 'Authorization': authHeader });
+
+  // Auto-accept Turbo confirmation dialogs (Randomize/Clear prompt before acting).
+  const dialogHandler = async (dialog) => { await dialog.accept(); };
+  page.on('dialog', dialogHandler);
+
+  await page.goto(`${BASE_URL}/admin/seating`, { waitUntil: 'networkidle2' });
+  const card = await page.$('a.card');
+  if (!card) {
+    console.log('  no events have seating tables — skipping floorplan');
+    page.off('dialog', dialogHandler);
+    await page.setExtraHTTPHeaders({});
+    return;
+  }
+
+  console.log('Opening floorplan and seating guests...');
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'networkidle2' }),
+    card.click(),
+  ]);
+
+  // Click "Randomize" to auto-seat attending guests so the chart isn't empty.
+  const randomize = await page.evaluateHandle(() =>
+    [...document.querySelectorAll('input[type=submit], button')]
+      .find(b => /randomize/i.test(b.value || b.textContent || ''))
+  );
+  const randomizeEl = randomize.asElement();
+  if (randomizeEl) {
+    await Promise.all([
+      page.waitForNavigation({ waitUntil: 'networkidle2' }).catch(() => {}),
+      randomizeEl.click(),
+    ]);
+    await new Promise(r => setTimeout(r, 800));
+  }
+
+  await screenshot(page, 'admin-seating-chart');
+  page.off('dialog', dialogHandler);
   await page.setExtraHTTPHeaders({});
 }
 
@@ -194,7 +240,8 @@ async function run() {
   const needsPages = STATIC_PAGES.some(p => targets.has(p.name));
   const needsRsvp = ['rsvp-lookup', 'rsvp-guests', 'rsvp-events'].some(t => targets.has(t));
   const needsHotel = targets.has('hotel-booking');
-  const needsAdmin = GROUPS.admin.some(t => targets.has(t));
+  const needsAdmin = ADMIN_PAGES.some(p => targets.has(p.name));
+  const needsSeatingChart = targets.has('admin-seating-chart');
 
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   const browser = await puppeteer.launch({ headless: true });
@@ -227,6 +274,10 @@ async function run() {
 
   if (needsAdmin) {
     await captureAdmin(page);
+  }
+
+  if (needsSeatingChart) {
+    await captureSeatingChart(page);
   }
 
   await browser.close();

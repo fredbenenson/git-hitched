@@ -1,0 +1,87 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag "seating", "data-turbo-track": "reload" %>
+<% end %>
+
+<div class="flex items-center justify-between mb-6">
+  <div>
+    <p class="type-serif-small text-muted" style="margin-bottom: 4px;">
+      <%= link_to "Seating", admin_seating_path, class: "underline hover:no-underline" %>
+      <span aria-hidden="true">&rsaquo;</span>
+      <span><%= @event.name %></span>
+    </p>
+    <h1 class="type-serif-heading" style="font-size: var(--text-3xl);"><%= @event.name %></h1>
+  </div>
+  <div class="flex gap-2">
+    <% if @can_undo %>
+      <%= button_to "Undo last move", undo_admin_event_seating_path(@event),
+          method: :post,
+          class: "btn btn-outline btn-sm" %>
+    <% end %>
+  </div>
+</div>
+
+<div class="seating-floorplan">
+  <div class="seating-floorplan__inner"
+       data-controller="seating"
+       data-seating-url-value="<%= move_admin_event_seating_path(@event) %>">
+    <div class="seating-floorplan__canvas" style="aspect-ratio: <%= @canvas_aspect %>;">
+      <% @tables.each do |table| %>
+        <%= render "admin/seating/table", table: table %>
+      <% end %>
+    </div>
+
+    <div class="seating-tools">
+
+
+      <div class="seating-tools__group">
+        <%= button_to "Randomize", randomize_admin_event_seating_path(@event),
+            method: :post,
+            class: "btn btn-primary btn-sm",
+            form: { data: { turbo_confirm: "Clear all unlocked seats and re-shuffle?" } } %>
+        <%= button_to "Clear", clear_admin_event_seating_path(@event),
+            method: :post,
+            class: "btn btn-outline btn-sm",
+            form: { data: { turbo_confirm: "Return all unlocked guests to the rail?" } } %>
+      </div>
+
+      <span class="seating-tools__divider" aria-hidden="true"></span>
+
+      <div class="seating-tools__group">
+        <%= button_to "Lock all", lock_all_admin_event_seating_path(@event),
+            method: :post,
+            class: "btn btn-outline btn-sm" %>
+        <%= button_to "Unlock all", unlock_all_admin_event_seating_path(@event),
+            method: :post,
+            class: "btn btn-outline btn-sm",
+            form: { data: { turbo_confirm: "Unlock every seat? Randomize will then be free to move anyone." } } %>
+      </div>
+
+      <span class="seating-tools__divider" aria-hidden="true"></span>
+
+      <div class="seating-tools__group">
+        <label class="seating-tool seating-tool--toggle">
+          <input type="checkbox" data-action="change->seating#toggleGroupMode" />
+          <span>Group mode</span>
+        </label>
+      </div>
+
+    </div>
+
+    <%= render "admin/seating/unseated_rail", groups: @unseated_groups %>
+  </div>
+</div>
+
+<div class="grid grid-cols-3 gap-4 mt-6">
+  <div class="stat-card text-center">
+    <p class="stat-value"><%= @tables.count %></p>
+    <p class="stat-label">Tables</p>
+  </div>
+  <div class="stat-card text-center">
+    <p class="stat-value"><%= @tables.sum(&:seat_count) %></p>
+    <p class="stat-label">Seats</p>
+  </div>
+  <div class="stat-card text-center">
+    <p class="stat-value"><%= @attending_count %></p>
+    <p class="stat-label">Attending</p>
+  </div>
+</div>

@@ -1,6 +1,7 @@
 <div class="flex items-center justify-between mb-6">
   <h1 class="type-serif-heading" style="font-size: var(--text-3xl);"><%= @invite.name %></h1>
   <div class="flex gap-2">
+    <%= link_to (@invite.responded? ? "Edit RSVP" : "Enter RSVP"), edit_admin_invite_rsvp_path(@invite), class: "btn btn-highlight btn-sm" %>
     <%= link_to "Edit", edit_admin_invite_path(@invite), class: "btn btn-outline btn-sm" %>
     <%= button_to "Delete", admin_invite_path(@invite), method: :delete,
       data: { turbo_confirm: "Are you sure?" },

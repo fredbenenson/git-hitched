@@ -1,0 +1,46 @@
+<%# Renders a single seat slot.
+    Locals: table, position
+    Optional: assignment, row ("top"|"bottom"|"left"|"right"|"arc"),
+              num_rotation, style %>
+<%
+  assignment = local_assigns[:assignment]
+  row        = local_assigns[:row] || "top"
+  num_rot    = local_assigns[:num_rotation] || 0
+  flip       = local_assigns[:flip_name]
+  locked     = assignment&.locked
+  name       = seat_display_name(assignment)
+  group_id   = assignment ? (assignment.rsvp.guest.invite.linked_invite_id || assignment.rsvp.guest.invite_id) : nil
+  draggable  = assignment && !locked
+  classes    = [
+    "seat",
+    "seat--row-#{row}",
+    ("seat--filled" if assignment),
+    ("seat--locked" if locked),
+    ("seat--flipped" if flip)
+  ].compact.join(" ")
+  dom_id     = assignment ? "seat_assignment_#{assignment.id}" : "seat_#{table.id}_#{position}"
+%>
+<div id="<%= dom_id %>"
+     class="<%= classes %>"
+     data-table-id="<%= table.id %>"
+     data-position="<%= position %>"
+     data-drop-target="seat"
+     <% if locked %>data-locked="true"<% end %>
+     <% if assignment %>data-rsvp-id="<%= assignment.rsvp_id %>" data-group-id="<%= group_id %>"<% end %>
+     <% if draggable %>draggable="true"<% end %><%= " style=\"#{local_assigns[:style]}\"".html_safe if local_assigns[:style] %>>
+  <% if name %>
+    <span class="seat__name"><%= name %></span>
+  <% else %>
+    <span class="seat__num" style="transform: rotate(<%= num_rot %>deg);"><%= position %></span>
+  <% end %>
+
+  <% if assignment %>
+    <%= button_to toggle_lock_admin_seat_assignment_path(assignment),
+        method: :patch,
+        class: "seat__lock",
+        title: locked ? "Unlock seat" : "Lock seat",
+        form: { class: "seat__lock-form", data: { turbo_frame: "_top" } } do %>
+      <span class="seat__lock-icon" style="transform: rotate(<%= num_rot %>deg);"><%= lock_icon_svg(locked) %></span>
+    <% end %>
+  <% end %>
+</div>

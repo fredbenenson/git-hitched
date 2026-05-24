@@ -1,0 +1,15 @@
+<h1 class="type-serif-heading" style="font-size: var(--text-3xl); margin-bottom: var(--space-6);">Guest Notes</h1>
+
+<p class="text-muted mb-6"><%= @invites.size %> invite<%= @invites.size == 1 ? "" : "s" %> with notes</p>
+
+<% @invites.each do |invite| %>
+  <div class="card mb-4" style="background: var(--color-bg-tertiary);">
+    <div class="card-body" style="padding: var(--space-4) var(--space-5);">
+      <div class="flex items-center justify-between" style="margin-bottom: var(--space-2);">
+        <h2 style="font-size: var(--text-base); font-weight: 500;"><%= link_to invite.name, admin_invite_path(invite) %></h2>
+        <span class="text-muted" style="font-size: var(--text-xs);"><%= invite.responded_at&.strftime("%b %d, %Y") %></span>
+      </div>
+      <p style="color: var(--color-text-secondary);"><%= simple_format(invite.notes) %></p>
+    </div>
+  </div>
+<% end %>

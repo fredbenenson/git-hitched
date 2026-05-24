@@ -1,0 +1,12 @@
+<p>Children's preferences from <strong><%= @invite.name %></strong> — <%= @children_names %>.</p>
+
+<% @children.each do |child| %>
+  <div class="guest-section">
+    <p class="guest-name"><%= child.full_name %></p>
+    <% notes = [] %>
+    <% notes << "Age #{child.age}" if child.age.present? %>
+    <% notes << (child.needs_highchair? ? "Highchair: yes" : "Highchair: no") %>
+    <% notes << "Reception seating: #{child.reception_seating.to_s.titleize}" if child.reception_seating.present? %>
+    <p class="meal-info"><%= notes.join(" · ") %></p>
+  </div>
+<% end %>

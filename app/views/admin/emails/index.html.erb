@@ -1,0 +1,119 @@
+<h1 class="type-serif-heading" style="font-size: var(--text-3xl); margin-bottom: var(--space-6);">Communications</h1>
+
+<h2 class="type-serif-heading" style="font-size: var(--text-lg); margin-bottom: var(--space-3);">Bulk Actions</h2>
+<div class="flex gap-3 flex-wrap mb-8">
+  <%= button_to "Send Invitations to All", admin_send_invitations_path, class: "btn btn-primary btn-sm",
+    data: { turbo_confirm: "This will send invitation emails to ALL invites with an email address. Continue?" } %>
+  <%= button_to "Export to Google Sheets", admin_export_path, class: "btn btn-primary btn-sm" %>
+</div>
+
+<h2 class="type-serif-heading" style="font-size: var(--text-lg); margin-bottom: var(--space-3);">RSVP Reminders</h2>
+<div class="card mb-4">
+  <p style="margin-bottom: var(--space-3);">
+    A reminder will be sent to <strong><%= @reminder_targets.size %></strong> invite<%= "s" unless @reminder_targets.size == 1 %>.
+    Targets are invites that <strong>have not responded yet</strong> (<code>responded_at</code> is null),
+    have <strong>not been marked as declined</strong>, have an <strong>email address on file</strong>,
+    and are attached to <strong>at least one event</strong>.
+  </p>
+  <p class="text-muted" style="font-size: var(--text-sm); margin: 0;">
+    Skipped:
+    <%= @skipped_responded %> already responded
+    &middot; <%= @skipped_declined %> marked as declined
+    &middot; <%= @skipped_no_email %> pending but have no email on file
+    &middot; <%= @skipped_send_reminder_off %> manually marked as skip
+  </p>
+</div>
+
+<% if @reminder_targets.any? %>
+  <div class="table-wrapper mb-4">
+    <table>
+      <thead>
+        <tr>
+          <th>Invite</th>
+          <th>Email</th>
+          <th class="text-center">Guests</th>
+          <th>Events</th>
+          <th>Added</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @reminder_targets.each do |invite| %>
+          <tr>
+            <td><%= link_to invite.name, admin_invite_path(invite) %></td>
+            <td class="text-muted"><%= invite.email %></td>
+            <td class="text-center"><%= invite.guests.size %></td>
+            <td class="text-muted"><%= invite.events.map(&:name).join(", ").presence || "—" %></td>
+            <td class="text-muted"><%= invite.created_at.strftime("%b %d, %Y") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mb-8">
+    <%= button_to "Send Reminders to #{@reminder_targets.size} Invite#{"s" unless @reminder_targets.size == 1}",
+      admin_send_reminders_path, class: "btn btn-primary btn-sm",
+      data: { turbo_confirm: "This will send reminder emails to the #{@reminder_targets.size} invites listed above. Continue?" } %>
+  </div>
+<% else %>
+  <p class="text-muted mb-8">No invites match the reminder criteria right now.</p>
+<% end %>
+
+<h2 class="type-serif-heading" style="font-size: var(--text-lg); margin-bottom: var(--space-3);">Children's Nanny Service</h2>
+<div class="card mb-4">
+  <p style="margin-bottom: var(--space-3);">
+    Sends the nanny service / dinner seating preferences email to
+    <strong><%= @children_targets.size %></strong> invite<%= "s" unless @children_targets.size == 1 %>.
+    Targets are invites that are <strong>attending</strong> and have <strong>children attending</strong>,
+    are not linked to another invite, and have an <strong>email address on file</strong>.
+  </p>
+  <% if @children_skipped_no_email > 0 %>
+    <p class="text-muted" style="font-size: var(--text-sm); margin: 0;">
+      Skipped: <%= @children_skipped_no_email %> with children attending but no email on file
+    </p>
+  <% end %>
+</div>
+
+<% if @children_targets.any? %>
+  <div class="table-wrapper mb-4">
+    <table>
+      <thead>
+        <tr>
+          <th>Invite</th>
+          <th>Email</th>
+          <th class="text-center">Children</th>
+          <th>Names</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @children_targets.each do |invite| %>
+          <% kids = invite.guests.select(&:is_child?) %>
+          <tr>
+            <td><%= link_to invite.name, admin_invite_path(invite) %></td>
+            <td class="text-muted"><%= invite.email %></td>
+            <td class="text-center"><%= kids.size %></td>
+            <td class="text-muted"><%= kids.map(&:first_name).join(", ") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mb-8">
+    <%= button_to "Send Nanny Service Email to #{@children_targets.size} Invite#{"s" unless @children_targets.size == 1}",
+      admin_send_children_preferences_path, class: "btn btn-primary btn-sm",
+      data: { turbo_confirm: "This will send the nanny service email to the #{@children_targets.size} invites listed above. Continue?" } %>
+  </div>
+<% else %>
+  <p class="text-muted mb-8">No invites match the criteria right now.</p>
+<% end %>
+
+<h2 class="type-serif-heading" style="font-size: var(--text-lg); margin-bottom: var(--space-3);">Test Emails</h2>
+<p class="text-muted" style="margin-bottom: var(--space-3); font-size: var(--text-sm);">Send a test email to the address in <code>TEST_EMAIL_ADDRESS</code> (defaults to <code>test@example.wedding</code>) using the first invite's data.</p>
+<div class="flex gap-3 flex-wrap">
+  <%= button_to "Test Invitation", admin_send_test_email_path(email_type: "invitation"), class: "btn btn-sm", style: "background: var(--color-bg-tertiary); color: var(--color-text-highlight); border: 1px solid var(--color-border);" %>
+  <%= button_to "Test Confirmation", admin_send_test_email_path(email_type: "confirmation"), class: "btn btn-sm", style: "background: var(--color-bg-tertiary); color: var(--color-text-highlight); border: 1px solid var(--color-border);" %>
+  <%= button_to "Test Update Notification", admin_send_test_email_path(email_type: "update_notification"), class: "btn btn-sm", style: "background: var(--color-bg-tertiary); color: var(--color-text-highlight); border: 1px solid var(--color-border);" %>
+  <%= button_to "Test Reminder", admin_send_test_email_path(email_type: "reminder"), class: "btn btn-sm", style: "background: var(--color-bg-tertiary); color: var(--color-text-highlight); border: 1px solid var(--color-border);" %>
+  <%= button_to "Test Nanny Service", admin_send_test_email_path(email_type: "children_preferences"), class: "btn btn-sm", style: "background: var(--color-bg-tertiary); color: var(--color-text-highlight); border: 1px solid var(--color-border);" %>
+</div>

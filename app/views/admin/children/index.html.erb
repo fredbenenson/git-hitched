@@ -1,0 +1,157 @@
+<div class="flex items-center justify-between mb-6">
+  <h1 class="type-serif-heading" style="font-size: var(--text-3xl);">Children</h1>
+  <span class="text-muted" style="font-size: var(--text-sm);">For childcare staffing</span>
+</div>
+
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+  <div class="stat-card">
+    <p class="stat-label">Attending kids</p>
+    <p class="stat-value"><%= @total_attending %></p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Need childcare</p>
+    <p class="stat-value"><%= @childcare_count %></p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Need highchair</p>
+    <p class="stat-value"><%= @highchair_count %></p>
+  </div>
+  <% @bracket_counts.each do |label, count| %>
+    <% next if label == "Unknown age" && count.zero? %>
+    <div class="stat-card">
+      <p class="stat-label"><%= label %></p>
+      <p class="stat-value"><%= count %></p>
+    </div>
+  <% end %>
+</div>
+
+<h2 class="type-serif-heading" style="font-size: var(--text-lg); margin-bottom: var(--space-3);">Reception dinner seating</h2>
+<div class="grid grid-cols-2 gap-4 mb-8">
+  <div class="stat-card">
+    <p class="stat-label">With parents</p>
+    <p class="stat-value"><%= @reception_with_parents %></p>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Kids' area</p>
+    <p class="stat-value"><%= @reception_kids_area %></p>
+  </div>
+</div>
+
+<h2 class="type-serif-heading" style="font-size: var(--text-lg); margin-bottom: var(--space-3);">Children attending per event</h2>
+<div class="table-wrapper mb-8">
+  <table>
+    <thead>
+      <tr>
+        <th>Event</th>
+        <th>Date</th>
+        <th class="text-center">Children attending</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @events.each do |event| %>
+        <tr>
+          <td><%= event.name %></td>
+          <td class="text-muted"><%= event.date&.strftime("%b %d, %Y") %></td>
+          <td class="text-center"><%= @per_event_counts[event.id] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<h2 class="type-serif-heading" style="font-size: var(--text-2xl); margin-bottom: var(--space-3);">Needs childcare</h2>
+
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+  <div class="stat-card">
+    <p class="stat-label">Need childcare</p>
+    <p class="stat-value"><%= @childcare_count %></p>
+  </div>
+  <% @childcare_bracket_counts.each do |label, count| %>
+    <% next if label == "Unknown age" && count.zero? %>
+    <div class="stat-card">
+      <p class="stat-label"><%= label %></p>
+      <p class="stat-value"><%= count %></p>
+    </div>
+  <% end %>
+</div>
+
+<% sections = [
+  [ "Attending", @attending, "text-success" ],
+  [ "Pending",   @pending,   "text-muted"   ],
+  [ "Declined",  @declined,  "text-muted"   ]
+] %>
+
+<% sections.each do |label, children, label_class| %>
+  <div class="mb-6">
+    <h2 class="type-serif-heading mb-2" style="font-size: var(--text-xl);">
+      <span class="<%= label_class %>"><%= label %></span>
+      <span class="text-muted" style="font-size: var(--text-sm); font-weight: normal;">(<%= children.size %>)</span>
+    </h2>
+
+    <% if children.any? %>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Age</th>
+              <th>Bracket</th>
+              <th>Coming with</th>
+              <th>Reception seating</th>
+              <th>Highchair</th>
+              <th>Childcare</th>
+              <th style="max-width: 180px; font-size: var(--text-xs);">Dietary</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% children.each do |child| %>
+              <% bracket = Admin::ChildrenController::AGE_BRACKETS.find { |_, test| test.call(child.age) }&.first %>
+              <% adults = child.invite.guests.reject(&:is_child?).map(&:full_name).join(", ") %>
+              <% reception_rsvp = child.rsvps.find { |r| r.event.name == "Reception" } %>
+              <% attending_reception = reception_rsvp&.attending %>
+              <tr>
+                <td><%= link_to child.full_name, admin_guest_path(child) %></td>
+                <td><%= child.age.presence || "—" %></td>
+                <td class="text-muted" style="font-size: var(--text-sm);"><%= bracket %></td>
+                <td>
+                  <%= link_to child.invite.name, admin_invite_path(child.invite) %>
+                  <% if adults.present? %>
+                    <div class="text-muted" style="font-size: var(--text-xs);"><%= adults %></div>
+                  <% end %>
+                </td>
+                <td style="font-size: var(--text-sm);">
+                  <% if attending_reception %>
+                    <% if child.seated_kids_area? %>
+                      <span class="text-success">Kids' area</span>
+                    <% else %>
+                      With parents
+                    <% end %>
+                  <% else %>
+                    <span class="text-muted">—</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if child.needs_highchair? %>
+                    <span class="text-success">Yes</span>
+                  <% else %>
+                    <span class="text-muted">—</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if child.needs_childcare? %>
+                    <span class="text-success">Yes</span>
+                  <% else %>
+                    <span class="text-muted">—</span>
+                  <% end %>
+                </td>
+                <td class="text-muted" style="max-width: 180px; font-size: var(--text-xs); white-space: normal; word-break: break-word;"><%= child.dietary_notes.presence || "" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-muted" style="font-size: var(--text-sm);">None.</p>
+    <% end %>
+  </div>
+<% end %>

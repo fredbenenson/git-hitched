@@ -1,38 +1,41 @@
-<h1 class="type-serif-heading" style="font-size: var(--text-3xl); margin-bottom: var(--space-6);">RSVP Dashboard</h1>
+<div class="flex justify-between items-center mb-6">
+  <h1 class="type-serif-heading" style="font-size: var(--text-3xl);">RSVP Dashboard</h1>
+  <%= link_to "Download Excel (per event)", admin_guests_xlsx_export_path, class: "btn btn-secondary" %>
+</div>
 
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-  <div class="stat-card">
+  <%= link_to admin_invites_path, class: "stat-card stat-card-link" do %>
     <p class="stat-label">Invites</p>
     <p class="stat-value"><%= @total_invites %></p>
-  </div>
-  <div class="stat-card">
+  <% end %>
+  <%= link_to admin_invites_path(status: "responded"), class: "stat-card stat-card-link" do %>
     <p class="stat-label">Responded</p>
     <p class="stat-value"><%= @responded_invites %></p>
-  </div>
-  <div class="stat-card">
+  <% end %>
+  <%= link_to admin_invites_path(status: "attending"), class: "stat-card stat-card-link" do %>
     <p class="stat-label">Attending</p>
     <p class="stat-value text-success"><%= @attending_invites %></p>
-  </div>
-  <div class="stat-card">
+  <% end %>
+  <%= link_to admin_invites_path(status: "declined"), class: "stat-card stat-card-link" do %>
     <p class="stat-label">Declined</p>
     <p class="stat-value text-error"><%= @declined_invites %></p>
-  </div>
-  <div class="stat-card">
+  <% end %>
+  <%= link_to admin_guests_path, class: "stat-card stat-card-link" do %>
     <p class="stat-label">Total Guests</p>
     <p class="stat-value"><%= @total_guests %></p>
-  </div>
-  <div class="stat-card">
-    <p class="stat-label">Response Rate</p>
-    <p class="stat-value"><%= @total_invites > 0 ? "#{(@responded_invites * 100.0 / @total_invites).round}%" : "N/A" %></p>
-  </div>
-  <div class="stat-card">
+  <% end %>
+  <%= link_to admin_invites_path(status: "pending"), class: "stat-card stat-card-link" do %>
+    <p class="stat-label">Pending</p>
+    <p class="stat-value"><%= @pending_invites %></p>
+  <% end %>
+  <%= link_to admin_guests_path(filter: "children"), class: "stat-card stat-card-link" do %>
     <p class="stat-label">Children</p>
     <p class="stat-value"><%= @children_count %></p>
-  </div>
-  <div class="stat-card">
+  <% end %>
+  <%= link_to admin_guests_path(filter: "childcare"), class: "stat-card stat-card-link" do %>
     <p class="stat-label">Need Childcare</p>
     <p class="stat-value"><%= @childcare_count %></p>
-  </div>
+  <% end %>
 </div>
 
 <h2 class="type-serif-heading" style="font-size: var(--text-lg); margin-bottom: var(--space-3);">By Event</h2>
@@ -52,9 +55,9 @@
         <tr>
           <td><%= link_to event.name, admin_event_path(event) %></td>
           <td class="text-muted"><%= event.date&.strftime("%b %d, %Y") %></td>
-          <td class="text-center text-success"><%= event.attending_count %></td>
-          <td class="text-center text-error"><%= event.declined_count %></td>
-          <td class="text-center text-muted"><%= event.pending_count %></td>
+          <td class="text-center text-success"><%= link_to event.attending_count, admin_event_path(event, anchor: "attending") %></td>
+          <td class="text-center text-error"><%= link_to event.declined_count, admin_event_path(event, anchor: "declined") %></td>
+          <td class="text-center text-muted"><%= link_to event.pending_count, admin_event_path(event, anchor: "pending") %></td>
         </tr>
       <% end %>
     </tbody>
@@ -75,19 +78,56 @@
   </div>
 <% end %>
 
-<div class="flex gap-3 flex-wrap">
-  <%= button_to "Export to Google Sheets", admin_export_path, class: "btn btn-primary btn-sm" %>
-  <%= button_to "Send Invitations to All", admin_send_invitations_path, class: "btn btn-primary btn-sm",
-    data: { turbo_confirm: "This will send invitation emails to ALL invites with an email address. Continue?" } %>
-  <%= button_to "Send Reminders to Non-Responders", admin_send_reminders_path, class: "btn btn-primary btn-sm",
-    data: { turbo_confirm: "This will send reminder emails to all invites that haven't responded yet. Continue?" } %>
-</div>
+<% if @recent_notes.any? %>
+  <h2 class="type-serif-heading" style="font-size: var(--text-lg); margin-bottom: var(--space-3);">Recent Notes</h2>
+  <div class="table-wrapper mb-8">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 30%;">Invite</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @recent_notes.each do |invite| %>
+          <tr>
+            <td><%= link_to invite.name, admin_invite_path(invite) %></td>
+            <td class="text-muted"><%= invite.notes %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
 
-<h2 class="type-serif-heading" style="font-size: var(--text-lg); margin-bottom: var(--space-3); margin-top: var(--space-6);">Test Emails</h2>
-<p class="text-muted" style="margin-bottom: var(--space-3); font-size: var(--text-sm);">Send a test email to benensonmacfadyen@gmail.com using the first invite's data.</p>
-<div class="flex gap-3 flex-wrap">
-  <%= button_to "Test Invitation", admin_send_test_email_path(email_type: "invitation"), class: "btn btn-sm", style: "background: var(--color-bg-tertiary); color: var(--color-text-highlight); border: 1px solid var(--color-border);" %>
-  <%= button_to "Test Confirmation", admin_send_test_email_path(email_type: "confirmation"), class: "btn btn-sm", style: "background: var(--color-bg-tertiary); color: var(--color-text-highlight); border: 1px solid var(--color-border);" %>
-  <%= button_to "Test Update Notification", admin_send_test_email_path(email_type: "update_notification"), class: "btn btn-sm", style: "background: var(--color-bg-tertiary); color: var(--color-text-highlight); border: 1px solid var(--color-border);" %>
-  <%= button_to "Test Reminder", admin_send_test_email_path(email_type: "reminder"), class: "btn btn-sm", style: "background: var(--color-bg-tertiary); color: var(--color-text-highlight); border: 1px solid var(--color-border);" %>
+<h2 class="type-serif-heading" style="font-size: var(--text-lg); margin-bottom: var(--space-3);">Recent Ceremony RSVPs</h2>
+<div class="table-wrapper mb-8">
+  <table>
+    <thead>
+      <tr>
+        <th>Guest</th>
+        <th>Invite</th>
+        <th>Status</th>
+        <th>Responded</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @recent_ceremony_rsvps.each do |rsvp| %>
+        <tr>
+          <td><%= rsvp.guest.first_name %> <%= rsvp.guest.last_name %></td>
+          <td class="text-muted"><%= link_to rsvp.guest.invite.name, admin_invite_path(rsvp.guest.invite) %></td>
+          <td>
+            <% if rsvp.attending? %>
+              <span class="text-success">Attending</span>
+            <% elsif rsvp.attending == false %>
+              <span class="text-error">Declined</span>
+            <% else %>
+              <span class="text-muted">Pending</span>
+            <% end %>
+          </td>
+          <td class="text-muted"><%= rsvp.updated_at.strftime("%b %d, %Y %l:%M %p") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>

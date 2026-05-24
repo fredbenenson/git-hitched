@@ -1,0 +1,58 @@
+<%# Rectangular table body. Seats sit OUTSIDE the rectangle on all four
+    sides (overlapping its edge slightly, like little tabs), so the rectangle
+    itself reads as the table top. Local: table %>
+<div class="seating-table__body">
+  <% if table.has_left_end %>
+    <div class="seating-table__end seating-table__end--left">
+      <%= render "admin/seating/seat",
+          table: table,
+          position: table.left_end_position,
+          assignment: @assignments[[ table.id,table.left_end_position ]],
+          row: "left" %>
+    </div>
+  <% end %>
+
+  <div class="seating-table__stack">
+    <div class="seating-table__row seating-table__row--top">
+      <% table.top_row_positions.each do |pos| %>
+        <%= render "admin/seating/seat",
+            table: table,
+            position: pos,
+            assignment: @assignments[[ table.id,pos ]],
+            row: "top" %>
+      <% end %>
+    </div>
+
+    <div class="seating-table__top" data-drop-target="table" data-table-id="<%= table.id %>">
+      <span class="seating-table__name"><%= table.name %></span>
+      <span class="seating-table__count"><%= table.occupied_count %> / <%= table.seat_count %></span>
+      <%= button_to shuffle_seats_admin_seating_table_path(table),
+          method: :post,
+          class: "seating-table__shuffle",
+          title: "Shuffle unlocked seats at this table",
+          form: { class: "seating-table__shuffle-form" } do %>
+        <%= shuffle_icon_svg %>
+      <% end %>
+    </div>
+
+    <div class="seating-table__row seating-table__row--bottom">
+      <% table.bottom_row_positions.each do |pos| %>
+        <%= render "admin/seating/seat",
+            table: table,
+            position: pos,
+            assignment: @assignments[[ table.id,pos ]],
+            row: "bottom" %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if table.has_right_end %>
+    <div class="seating-table__end seating-table__end--right">
+      <%= render "admin/seating/seat",
+          table: table,
+          position: table.right_end_position,
+          assignment: @assignments[[ table.id,table.right_end_position ]],
+          row: "right" %>
+    </div>
+  <% end %>
+</div>

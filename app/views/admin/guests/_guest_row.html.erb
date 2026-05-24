@@ -1,0 +1,18 @@
+<tr id="<%= dom_id(guest) %>">
+  <td><%= link_to guest.full_name, admin_guest_path(guest) %></td>
+  <td>
+    <% if guest.is_child? %>
+      <span class="text-muted" style="font-size: var(--text-sm);">—</span>
+    <% else %>
+      <%= form_with model: guest, url: admin_guest_path(guest), method: :patch,
+          data: { controller: "auto-submit", action: "change->auto-submit#submit" } do |f| %>
+        <%= f.email_field :email, value: guest.email,
+              class: "form-input", style: "padding: var(--space-1) var(--space-2); font-size: var(--text-sm); width: 100%;" %>
+      <% end %>
+    <% end %>
+  </td>
+  <td><%= link_to guest.invite.name, admin_invite_path(guest.invite) %></td>
+  <td><%= guest.meal_choice&.titleize %></td>
+  <td class="text-muted" style="max-width: 140px; font-size: var(--text-xs); white-space: normal; word-break: break-word;"><%= guest.dietary_notes.presence || "" %></td>
+  <td><%= guest.is_child? ? (guest.age.present? ? "Yes (#{guest.age})" : "Yes") : "" %></td>
+</tr>

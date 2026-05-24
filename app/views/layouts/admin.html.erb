@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Pinyon+Script&display=swap" rel="stylesheet">
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "wedding", "data-turbo-track": "reload" %>
+    <%= yield :head %>
     <%= javascript_importmap_tags %>
   </head>
 
@@ -25,9 +26,17 @@
             <span style="color: var(--color-text-muted);">&middot;</span>
             <%= link_to "Guests", admin_guests_path, class: "type-serif-small" %>
             <span style="color: var(--color-text-muted);">&middot;</span>
+            <%= link_to "Children", admin_children_path, class: "type-serif-small" %>
+            <span style="color: var(--color-text-muted);">&middot;</span>
             <%= link_to "Events", admin_events_path, class: "type-serif-small" %>
             <span style="color: var(--color-text-muted);">&middot;</span>
+            <%= link_to "Seating", admin_seating_path, class: "type-serif-small" %>
+            <span style="color: var(--color-text-muted);">&middot;</span>
             <%= link_to "Hotel Bookings", admin_hotel_bookings_path, class: "type-serif-small" %>
+            <span style="color: var(--color-text-muted);">&middot;</span>
+            <%= link_to "Emails", admin_emails_path, class: "type-serif-small" %>
+            <span style="color: var(--color-text-muted);">&middot;</span>
+            <%= link_to "Notes", admin_notes_path, class: "type-serif-small" %>
             <span style="color: var(--color-text-muted);">&middot;</span>
             <%= link_to "Import CSV", admin_import_path, class: "type-serif-small" %>
           </div>

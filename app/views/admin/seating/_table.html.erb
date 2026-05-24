@@ -1,0 +1,13 @@
+<%# Renders a single table on the floorplan.
+    Local: table (SeatingTable) %>
+<div id="seating_table_<%= table.id %>"
+     class="seating-table seating-table--<%= table.shape %>"
+     style="left: <%= table.pos_x %>%; top: <%= table.pos_y %>%;"
+     data-table-id="<%= table.id %>"
+     data-table-name="<%= table.name %>">
+  <% if table.shape == "curve" %>
+    <%= render "admin/seating/curved_body", table: table %>
+  <% else %>
+    <%= render "admin/seating/rect_body", table: table %>
+  <% end %>
+</div>

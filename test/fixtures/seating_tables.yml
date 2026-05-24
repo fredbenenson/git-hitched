@@ -1,0 +1,38 @@
+welcome_t1:
+  event: welcome
+  name: T1
+  shape: rect
+  top_seats: 13
+  bottom_seats: 13
+  has_left_end: true
+  has_right_end: true
+  seat_count: 28
+  pos_x: 30
+  pos_y: 18
+  sort_order: 1
+
+welcome_t2:
+  event: welcome
+  name: T2
+  shape: rect
+  top_seats: 16
+  bottom_seats: 16
+  has_left_end: true
+  has_right_end: true
+  seat_count: 34
+  pos_x: 30
+  pos_y: 50
+  sort_order: 2
+
+reception_t1:
+  event: reception
+  name: T1
+  shape: curve
+  top_seats: 12
+  bottom_seats: 12
+  has_left_end: false
+  has_right_end: false
+  seat_count: 24
+  pos_x: 50
+  pos_y: 50
+  sort_order: 1

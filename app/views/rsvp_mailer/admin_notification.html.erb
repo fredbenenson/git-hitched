@@ -1,0 +1,40 @@
+<p>New RSVP from <strong><%= @invite.name %></strong> — <%= @invite.attending? ? "Attending" : "Declined" %>.</p>
+
+<% @guests.each do |guest| %>
+  <div class="guest-section">
+    <p class="guest-name"><%= guest.full_name %></p>
+    <table class="rsvp-table">
+      <% @events.each do |event| %>
+        <% rsvp = guest.rsvp_for(event) %>
+        <tr>
+          <td><%= event.name %></td>
+          <td>
+            <% if rsvp&.attending == true %>
+              <span class="rsvp-attending">Attending</span>
+            <% elsif rsvp&.attending == false %>
+              <span class="rsvp-declined">Declined</span>
+            <% else %>
+              <span class="rsvp-pending">Pending</span>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+    <% notes = [] %>
+    <% notes << "Meal: #{guest.meal_choice.titleize}" if guest.meal_choice.present? && guest.meal_choice != "tbd" %>
+    <% notes << "Dietary notes: #{guest.dietary_notes}" if guest.dietary_notes.present? %>
+    <% notes << "Needs childcare" if guest.needs_childcare? %>
+    <% notes << "Highchair requested" if guest.is_child? && guest.needs_highchair? %>
+    <% notes << "Reception seating: #{guest.reception_seating.to_s.titleize}" if guest.is_child? %>
+    <% if notes.any? %>
+      <p class="meal-info"><%= notes.join(" · ") %></p>
+    <% end %>
+  </div>
+<% end %>
+
+<% if @invite.notes.present? %>
+  <div class="guest-section">
+    <p class="guest-name">Notes</p>
+    <p class="meal-info"><%= @invite.notes %></p>
+  </div>
+<% end %>

@@ -128,6 +128,7 @@ class RsvpsController < ApplicationController
       else
         RsvpMailer.update_notification(@invite).deliver_later
       end
+      RsvpMailer.admin_notification(@invite).deliver_later
       redirect_to rsvp_show_path(invite_id: @invite.id), notice: "We're sorry you can't make it! Your response has been saved."
     end
   end
@@ -160,6 +161,7 @@ class RsvpsController < ApplicationController
     else
       RsvpMailer.update_notification(@invite).deliver_later
     end
+    RsvpMailer.admin_notification(@invite).deliver_later
 
     redirect_to rsvp_show_path(invite_id: @invite.id, step: "confirmation")
   end

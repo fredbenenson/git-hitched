@@ -98,4 +98,37 @@ Guest.find_or_create_by!(invite: robin, first_name: "Robin's", last_name: "Guest
   EventInvite.find_or_create_by!(invite: robin, event: event)
 end
 
+puts "Seeding seating tables..."
+
+# Floorplan tables per event. Idempotent on the [event_id, name] unique index.
+# top_seats/bottom_seats are the two long sides; has_left_end/has_right_end add
+# a single seat at each rounded end (rect tables only).
+seating_layout = {
+  welcome => [
+    { name: "T1", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: true,  has_right_end: true,  seat_count: 28, pos_x: 30, pos_y: 18, sort_order: 1 },
+    { name: "T2", shape: "rect",  top_seats: 16, bottom_seats: 16, has_left_end: true,  has_right_end: true,  seat_count: 34, pos_x: 30, pos_y: 50, sort_order: 2 },
+    { name: "T3", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: true,  has_right_end: true,  seat_count: 28, pos_x: 30, pos_y: 82, sort_order: 3 },
+    { name: "T4", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: true,  has_right_end: true,  seat_count: 28, pos_x: 70, pos_y: 18, sort_order: 4 },
+    { name: "T5", shape: "rect",  top_seats: 16, bottom_seats: 16, has_left_end: true,  has_right_end: true,  seat_count: 34, pos_x: 70, pos_y: 50, sort_order: 5 },
+    { name: "T6", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: true,  has_right_end: true,  seat_count: 28, pos_x: 70, pos_y: 82, sort_order: 6 }
+  ],
+  reception => [
+    { name: "T1", shape: "curve", top_seats: 12, bottom_seats: 12, has_left_end: false, has_right_end: false, seat_count: 24, pos_x: 50, pos_y: 50, sort_order: 1 },
+    { name: "T2", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 80, pos_y: 18, sort_order: 2 },
+    { name: "T3", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 80, pos_y: 50, sort_order: 3 },
+    { name: "T4", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 80, pos_y: 82, sort_order: 4 },
+    { name: "T5", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 20, pos_y: 18, sort_order: 5 },
+    { name: "T6", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 20, pos_y: 50, sort_order: 6 },
+    { name: "T7", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 20, pos_y: 82, sort_order: 7 }
+  ]
+}
+
+seating_layout.each do |event, tables|
+  tables.each do |attrs|
+    table = SeatingTable.find_or_initialize_by(event: event, name: attrs[:name])
+    table.assign_attributes(attrs)
+    table.save!
+  end
+end
+
 puts "Seed complete! #{Invite.count} invites, #{Guest.count} guests, #{Event.count} events."

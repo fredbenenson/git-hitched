@@ -1,0 +1,55 @@
+<% content_for(:title, "Children's Preferences — #{WEDDING[:couple_names]}") %>
+
+<h1 class="type-serif-heading" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">A few details for the little ones</h1>
+<p style="color: var(--color-text-secondary); margin-bottom: var(--space-6); max-width: 640px;">
+  Hi <%= @invite.name %> — we'll have a dedicated nanny team across both dinner events.
+  Let us know whether each child will need a highchair, and where they'll sit at the wedding dinner.
+</p>
+
+<% if @children.empty? %>
+  <div class="card" style="margin-bottom: var(--space-6);">
+    <p style="margin: 0;">We don't have any children listed on your invitation. If that's not right, please use the full <%= link_to "RSVP form", rsvp_path %> to add them.</p>
+  </div>
+<% else %>
+  <%= form_with url: update_children_preferences_path(token: params[:token]), method: :patch do |f| %>
+    <% @children.each do |child| %>
+      <% reception_rsvp = @reception ? child.rsvp_for(@reception) : nil %>
+      <% show_seating = reception_rsvp.nil? || reception_rsvp.attending != false %>
+      <div class="card" style="margin-bottom: var(--space-6);">
+        <h2 style="font-family: var(--font-serif); font-size: var(--text-xl); color: var(--color-text-highlight); margin-bottom: var(--space-4);">
+          <%= child.full_name %><% if child.age.present? %> <span style="color: var(--color-text-muted); font-size: var(--text-sm); font-weight: normal;">&bull; Age <%= child.age %></span><% end %>
+        </h2>
+
+        <% if show_seating %>
+          <div style="margin-bottom: var(--space-4);">
+            <div style="font-size: var(--text-sm); color: var(--color-text-secondary); margin-bottom: var(--space-2);">
+              Where will <%= child.first_name %> sit at the wedding dinner?
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-6);">
+              <label class="form-check form-check-sm" style="display: flex; align-items: center; gap: var(--space-2); margin: 0;">
+                <%= radio_button_tag "children[#{child.id}][reception_seating]", "with_parents", child.seated_with_parents? %>
+                <span style="font-size: var(--text-sm);">Seated with parents</span>
+              </label>
+              <label class="form-check form-check-sm" style="display: flex; align-items: center; gap: var(--space-2); margin: 0;">
+                <%= radio_button_tag "children[#{child.id}][reception_seating]", "kids_area", child.seated_kids_area? %>
+                <span style="font-size: var(--text-sm);">Supervised kids' area</span>
+              </label>
+            </div>
+          </div>
+        <% end %>
+
+        <div<% if show_seating %> style="padding-top: var(--space-4); border-top: 1px dashed var(--color-border);"<% end %>>
+          <label class="form-check" style="margin: 0;">
+            <input type="hidden" name="children[<%= child.id %>][needs_highchair]" value="0">
+            <%= check_box_tag "children[#{child.id}][needs_highchair]", "1", child.needs_highchair? %>
+            <span class="form-check-label" style="font-size: var(--text-sm);">Highchair needed</span>
+          </label>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="text-center">
+      <%= f.submit "Save preferences", class: "btn btn-highlight btn-lg" %>
+    </div>
+  <% end %>
+<% end %>

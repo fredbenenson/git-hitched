@@ -11,10 +11,12 @@ A complete, self-hosted wedding website you can fork and make your own. Handles 
 - **Household model** — Invites represent a household, not an individual. One invite can have multiple guests, and each guest RSVPs independently to each event.
 - **Multi-event support** — Define as many events as you need (welcome dinner, ceremony, reception, recovery brunch, etc.). Not every household has to be invited to every event.
 - **Meal & dietary tracking** — Each guest picks from configurable meal choices (chicken, fish, vegetarian, vegan) with a free-text dietary notes field.
-- **Children & childcare** — Track which guests are children, their ages, and whether they need childcare. Dashboard shows totals.
+- **Children & childcare** — Track which guests are children, their ages, and whether they need childcare. A standalone token-linked page lets parents set per-child highchair and reception-dinner seating (with parents vs. supervised kids' area) preferences. A childcare-staffing dashboard breaks children down by age bracket and event.
+- **Seating chart planner** — Lay out tables per event (rectangular or curved, with configurable seats and ends), auto-assign attending guests with a worst-fit grouping algorithm that keeps households and linked invites together, then fine-tune with drag-and-drop, per-seat locking, shuffle, randomize, and undo. Export the finished plan to Excel.
 - **Hotel room block with Stripe** — Guests can book hotel rooms and pay via Stripe Checkout. Admins can view bookings, track revenue, and issue refunds — all from the admin panel.
-- **Automated emails** — Four RSVP email types (invitation, confirmation, update notification, reminder) plus three hotel booking emails (confirmation, admin notification, refund). All include signed token links so guests can manage their RSVP without logging in.
-- **Admin dashboard** — Response rates, per-event attendance breakdowns, meal choice counts, children/childcare stats, bulk email sending, CSV import from Google Sheets, and hotel booking management.
+- **Excel exports** — Download a formatted guest workbook (responses, meals, dietary notes, childcare) and a per-event seating workbook, generated with `caxlsx`.
+- **Automated emails** — RSVP email types (invitation, confirmation, update notification, reminder, children's preferences) plus an admin notification on every RSVP, and three hotel booking emails (confirmation, admin notification, refund). All include signed token links so guests can manage their RSVP without logging in.
+- **Admin dashboard & tools** — Response rates, per-event attendance breakdowns, meal choice counts, children/childcare stats, and recent RSVP activity. Plus a dedicated emails page (targeted bulk sends with skip reasons), an inline RSVP editor for entering responses on a guest's behalf, invite linking (so two households share one RSVP), per-invite reminder opt-out, a notes view, searchable/filterable invite and guest lists with inline email editing, CSV import, and hotel booking management.
 - **Page feature flags** — Show or hide any content page (events, travel, stay, FAQ, etc.) from a single YAML file. Flip pages on as you're ready — no deploys needed in development.
 - **Dev mode toggle** — A floating switch in development that shows all pages regardless of feature flags, so you can work on hidden pages without editing config.
 
@@ -36,6 +38,12 @@ A complete, self-hosted wedding website you can fork and make your own. Handles 
 
 ### Admin Dashboard
 ![Admin Dashboard](docs/screenshots/admin-dashboard.png)
+
+### Seating Chart Planner
+![Seating Chart](docs/screenshots/admin-seating-chart.png)
+
+### Children & Childcare Dashboard
+![Children Dashboard](docs/screenshots/admin-children.png)
 
 [View all screenshots](https://fredbenenson.github.io/git-hitched/screenshots.html) — gate, events, stay, FAQ, RSVP lookup, and the full admin panel.
 

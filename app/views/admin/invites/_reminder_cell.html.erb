@@ -1,0 +1,10 @@
+<td id="<%= dom_id(invite, :reminder_cell) %>" class="text-center">
+  <%= form_with url: toggle_reminder_admin_invite_path(invite), method: :patch,
+                data: { controller: "auto-submit", turbo_stream: true } do |f| %>
+    <%= hidden_field_tag :send_reminder, "0" %>
+    <%= check_box_tag :send_reminder, "1", invite.send_reminder,
+                      data: { action: "change->auto-submit#submit" },
+                      title: invite.send_reminder ? "Uncheck to skip reminder" : "Check to include in reminders",
+                      style: "cursor: pointer;" %>
+  <% end %>
+</td>

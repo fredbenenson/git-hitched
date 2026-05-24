@@ -1,0 +1,92 @@
+<%# Curved table body — two semicircles facing each other with a gap in between.
+    Seats arc around the outside of each half-disc.
+    Local: table %>
+<%
+  radius       = 95   # outer half-disc radius (px)
+  thickness    = 26   # table-top width — the "arch" thickness
+  seat_width   = 24   # chair-back length (tangent to the arc)
+  seat_height  = 14   # chair depth (radial — back to front)
+  seat_offset  = 6    # gap between outer disc edge and seat
+  gap_middle   = 40   # space between the two halves (the planners' "0.8m space")
+
+  # Container needs to hold the rotated seat at any angle; the seat's
+  # widest dimension governs how far it can poke past the disc.
+  ext = seat_offset + seat_width
+  container_w = 2 * radius + 2 * ext
+  container_h = 2 * radius + 2 * ext + gap_middle
+
+  top_cx = container_w / 2.0
+  top_cy = ext + radius                          # virtual circle center for top arc
+  bot_cx = container_w / 2.0
+  bot_cy = ext + radius + gap_middle             # virtual circle center for bottom arc
+
+  # Seat center sits one half-depth past the disc edge plus the offset gap.
+  seat_center_dist = radius + seat_offset + seat_height / 2.0
+
+  arc_positions = lambda do |positions, cx, cy, half|
+    n = positions.length
+    step = 180.0 / n
+    positions.each_with_index.map do |pos, i|
+      deg = half == :top ? (180 - (i + 0.5) * step) : (180 + (i + 0.5) * step)
+      rad = deg * Math::PI / 180
+      x = cx + seat_center_dist * Math.cos(rad)
+      y = cy - seat_center_dist * Math.sin(rad)
+      # Rotate so the seat's "back" (top edge) faces away from the table center.
+      # CSS rotation 0deg = up; math angle 90deg = up → CSS = 90 - deg.
+      rotation = (90 - deg).round(1)
+      # Seats on the LEFT half of the table (cos < 0) would have their radial
+      # name labels reading upside-down; flag them so the name CSS flips.
+      flip_name = Math.cos(rad) < 0
+      { pos: pos, x: x, y: y, rotation: rotation, flip_name: flip_name }
+    end
+  end
+
+  top_seats = arc_positions.call(table.top_row_positions, top_cx, top_cy, :top)
+  bot_seats = arc_positions.call(table.bottom_row_positions, bot_cx, bot_cy, :bottom)
+%>
+
+<div class="curved-table" style="width: <%= container_w %>px; height: <%= container_h %>px;">
+  <%# Top half: outer disc with inner cut-out to form an arch %>
+  <div class="curved-table__disc curved-table__disc--top"
+       style="left: <%= ext %>px; top: <%= ext %>px; width: <%= 2 * radius %>px; height: <%= radius %>px;"></div>
+  <div class="curved-table__hole curved-table__hole--top"
+       style="left: <%= ext + thickness %>px; top: <%= ext + thickness %>px; width: <%= 2 * (radius - thickness) %>px; height: <%= radius - thickness %>px;"></div>
+
+  <%# Bottom half: same trick %>
+  <div class="curved-table__disc curved-table__disc--bottom"
+       style="left: <%= ext %>px; top: <%= ext + radius + gap_middle %>px; width: <%= 2 * radius %>px; height: <%= radius %>px;"></div>
+  <div class="curved-table__hole curved-table__hole--bottom"
+       style="left: <%= ext + thickness %>px; top: <%= ext + radius + gap_middle %>px; width: <%= 2 * (radius - thickness) %>px; height: <%= radius - thickness %>px;"></div>
+
+  <div class="curved-table__label"
+       data-drop-target="table"
+       data-table-id="<%= table.id %>"
+       style="top: <%= ext + radius %>px; height: <%= gap_middle %>px; left: <%= ext %>px; width: <%= 2 * radius %>px;">
+    <span class="seating-table__name"><%= table.name %></span>
+    <span class="seating-table__count"><%= table.occupied_count %> / <%= table.seat_count %></span>
+    <%= button_to shuffle_seats_admin_seating_table_path(table),
+        method: :post,
+        class: "seating-table__shuffle",
+        title: "Shuffle unlocked seats at this table",
+        form: { class: "seating-table__shuffle-form" } do %>
+      <%= shuffle_icon_svg %>
+    <% end %>
+  </div>
+
+  <% (top_seats + bot_seats).each do |s| %>
+    <%
+      assignment = @assignments[[ table.id, s[:pos] ]]
+      seat_style = "left: #{(s[:x] - seat_width / 2.0).round(1)}px; top: #{(s[:y] - seat_height / 2.0).round(1)}px; width: #{seat_width}px; height: #{seat_height}px; transform: rotate(#{s[:rotation]}deg);"
+      # Counter-rotate the position number so it stays upright; names follow the seat tangentially.
+      num_rot = -s[:rotation]
+    %>
+    <%= render "admin/seating/seat",
+        table: table,
+        position: s[:pos],
+        assignment: assignment,
+        row: "arc",
+        style: seat_style,
+        num_rotation: num_rot,
+        flip_name: s[:flip_name] %>
+  <% end %>
+</div>

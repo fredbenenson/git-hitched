@@ -3,6 +3,24 @@
   <%= link_to "New Guest", new_admin_guest_path, class: "btn btn-primary btn-sm" %>
 </div>
 
+<% if params[:filter].present? %>
+  <div class="mb-4" style="display: flex; align-items: center; gap: var(--space-2);">
+    <span style="background: var(--color-bg-tertiary); border: 1px solid var(--color-border-light); border-radius: var(--radius-sm); padding: var(--space-1) var(--space-3); font-size: var(--text-sm);">
+      <%= params[:filter].titleize %>
+    </span>
+    <%= link_to "Clear", admin_guests_path, style: "font-size: var(--text-sm); color: var(--color-text-muted);" %>
+  </div>
+<% end %>
+
+<div class="flex gap-2 mb-4 flex-wrap">
+  <%= link_to "Missing email", admin_guests_path(filter: "missing_email"),
+      class: "btn btn-sm #{params[:filter] == 'missing_email' ? 'btn-primary' : 'btn-outline'}" %>
+  <%= link_to "Children", admin_guests_path(filter: "children"),
+      class: "btn btn-sm #{params[:filter] == 'children' ? 'btn-primary' : 'btn-outline'}" %>
+  <%= link_to "Childcare", admin_guests_path(filter: "childcare"),
+      class: "btn btn-sm #{params[:filter] == 'childcare' ? 'btn-primary' : 'btn-outline'}" %>
+</div>
+
 <%= form_with url: admin_guests_path, method: :get, class: "mb-4" do %>
   <div class="flex gap-2">
     <%= text_field_tag :q, params[:q], placeholder: "Search by name...", class: "form-input flex-1" %>
@@ -10,31 +28,39 @@
   </div>
 <% end %>
 
-<div class="table-wrapper">
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Invite</th>
-        <th>Meal</th>
-        <th>Primary</th>
-        <th>Child</th>
-        <th>Age</th>
-        <th>Childcare</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @guests.each do |guest| %>
-        <tr>
-          <td><%= link_to guest.full_name, admin_guest_path(guest) %></td>
-          <td><%= link_to guest.invite.name, admin_invite_path(guest.invite) %></td>
-          <td><%= guest.meal_choice.titleize %></td>
-          <td><%= guest.is_primary? ? "Yes" : "" %></td>
-          <td><%= guest.is_child? ? "Yes" : "" %></td>
-          <td><%= guest.age %></td>
-          <td><%= guest.needs_childcare? ? "Yes" : "" %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+<% sections = [
+  [ "Attending", @attending, "text-success" ],
+  [ "Pending",   @pending,   "text-muted"   ],
+  [ "Declined",  @declined,  "text-muted"   ]
+] %>
+
+<% sections.each do |label, guests, label_class| %>
+  <div class="mb-6">
+    <h2 class="type-serif-heading mb-2" style="font-size: var(--text-xl);">
+      <span class="<%= label_class %>"><%= label %></span>
+      <span class="text-muted" style="font-size: var(--text-sm); font-weight: normal;">(<%= guests.size %>)</span>
+    </h2>
+
+    <% if guests.any? %>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th style="min-width: 260px;">Email</th>
+              <th>Invite</th>
+              <th>Meal</th>
+              <th style="max-width: 140px; font-size: var(--text-xs);">Dietary</th>
+              <th>Child</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= render partial: "guest_row", collection: guests, as: :guest %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <p class="text-muted" style="font-size: var(--text-sm);">None.</p>
+    <% end %>
+  </div>
+<% end %>
