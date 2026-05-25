@@ -27,18 +27,25 @@
   </head>
 
   <body class="h-full">
-    <nav style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border-light);" class="sticky top-0 z-50">
+    <nav style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border-light);" class="sticky top-0 z-50" data-controller="nav">
       <div class="px-8 py-4 flex items-center justify-center">
-        <div class="flex gap-6 items-center flex-wrap justify-center">
-          <%= link_to "Home", root_path, class: "type-serif-small" if page_enabled?(:home) %>
-          <%= link_to "Events", events_path, class: "type-serif-small" if page_enabled?(:events) %>
-          <%= link_to "Travel", travel_path, class: "type-serif-small" if page_enabled?(:travel) %>
-          <%= link_to "Stay", stay_path, class: "type-serif-small" if page_enabled?(:stay) %>
-          <%= link_to "Explore", explore_path, class: "type-serif-small" if page_enabled?(:explore) %>
-          <%= link_to "Attire", attire_path, class: "type-serif-small" if page_enabled?(:attire) %>
-          <%= link_to "FAQ", faq_path, class: "type-serif-small" if page_enabled?(:faq) %>
-          <%= link_to "Hotel", new_hotel_booking_path, class: "type-serif-small" if page_enabled?(:hotel) %>
-          <%= link_to "RSVP", rsvp_path, class: "btn btn-highlight", style: "margin-left: var(--space-4);" if page_enabled?(:rsvp) %>
+        <div class="nav-mobile-wrapper">
+          <button class="nav-hamburger" data-action="click->nav#toggle" data-nav-target="hamburger" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <div class="nav-links" data-nav-target="menu">
+            <%= link_to "Home", root_path, class: "type-serif-small", data: { action: "click->nav#close" } if page_enabled?(:home) %>
+            <%= link_to "Events", events_path, class: "type-serif-small", data: { action: "click->nav#close" } if page_enabled?(:events) %>
+            <%= link_to "Travel", travel_path, class: "type-serif-small", data: { action: "click->nav#close" } if page_enabled?(:travel) %>
+            <%= link_to "Stay", stay_path, class: "type-serif-small", data: { action: "click->nav#close" } if page_enabled?(:stay) %>
+            <%= link_to "Explore", explore_path, class: "type-serif-small", data: { action: "click->nav#close" } if page_enabled?(:explore) %>
+            <%= link_to "Attire", attire_path, class: "type-serif-small", data: { action: "click->nav#close" } if page_enabled?(:attire) %>
+            <%= link_to "FAQ", faq_path, class: "type-serif-small", data: { action: "click->nav#close" } if page_enabled?(:faq) %>
+            <%= link_to "Hotel", new_hotel_booking_path, class: "type-serif-small", data: { action: "click->nav#close" } if page_enabled?(:hotel) %>
+            <%= link_to "RSVP", rsvp_path, class: "btn btn-highlight", style: "margin-left: var(--space-4);", data: { action: "click->nav#close" } if page_enabled?(:rsvp) %>
+          </div>
         </div>
       </div>
     </nav>

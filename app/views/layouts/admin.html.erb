@@ -15,33 +15,29 @@
   </head>
 
   <body class="h-full">
-    <nav style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border-light);">
+    <nav class="admin-nav" style="background: var(--color-bg-tertiary); border-bottom: 1px solid var(--color-border-light);" data-controller="nav">
       <div class="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-6">
-          <span class="type-serif-heading" style="font-size: var(--text-lg);">Wedding Admin</span>
-          <div class="flex gap-4 items-center">
-            <%= link_to "Dashboard", admin_root_path, class: "type-serif-small" %>
-            <span style="color: var(--color-text-muted);">&middot;</span>
-            <%= link_to "Invites", admin_invites_path, class: "type-serif-small" %>
-            <span style="color: var(--color-text-muted);">&middot;</span>
-            <%= link_to "Guests", admin_guests_path, class: "type-serif-small" %>
-            <span style="color: var(--color-text-muted);">&middot;</span>
-            <%= link_to "Children", admin_children_path, class: "type-serif-small" %>
-            <span style="color: var(--color-text-muted);">&middot;</span>
-            <%= link_to "Events", admin_events_path, class: "type-serif-small" %>
-            <span style="color: var(--color-text-muted);">&middot;</span>
-            <%= link_to "Seating", admin_seating_path, class: "type-serif-small" %>
-            <span style="color: var(--color-text-muted);">&middot;</span>
-            <%= link_to "Hotel Bookings", admin_hotel_bookings_path, class: "type-serif-small" %>
-            <span style="color: var(--color-text-muted);">&middot;</span>
-            <%= link_to "Emails", admin_emails_path, class: "type-serif-small" %>
-            <span style="color: var(--color-text-muted);">&middot;</span>
-            <%= link_to "Notes", admin_notes_path, class: "type-serif-small" %>
-            <span style="color: var(--color-text-muted);">&middot;</span>
-            <%= link_to "Import CSV", admin_import_path, class: "type-serif-small" %>
+        <div class="admin-menu-wrapper">
+          <button class="nav-hamburger admin-hamburger" data-action="click->nav#toggle" data-nav-target="hamburger" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <div class="admin-nav-links nav-links" data-nav-target="menu">
+            <%= link_to "Dashboard", admin_root_path, class: "type-serif-small", data: { action: "click->nav#close" } %>
+            <%= link_to "Invites", admin_invites_path, class: "type-serif-small", data: { action: "click->nav#close" } %>
+            <%= link_to "Guests", admin_guests_path, class: "type-serif-small", data: { action: "click->nav#close" } %>
+            <%= link_to "Children", admin_children_path, class: "type-serif-small", data: { action: "click->nav#close" } %>
+            <%= link_to "Events", admin_events_path, class: "type-serif-small", data: { action: "click->nav#close" } %>
+            <%= link_to "Seating", admin_seating_path, class: "type-serif-small", data: { action: "click->nav#close" } %>
+            <%= link_to "Hotel Bookings", admin_hotel_bookings_path, class: "type-serif-small", data: { action: "click->nav#close" } %>
+            <%= link_to "Emails", admin_emails_path, class: "type-serif-small", data: { action: "click->nav#close" } %>
+            <%= link_to "Notes", admin_notes_path, class: "type-serif-small", data: { action: "click->nav#close" } %>
+            <%= link_to "Import CSV", admin_import_path, class: "type-serif-small", data: { action: "click->nav#close" } %>
+            <%= link_to "View Site", root_path, class: "btn btn-ghost btn-sm", data: { action: "click->nav#close" } %>
           </div>
         </div>
-        <%= link_to "View Site", root_path, class: "btn btn-ghost btn-sm" %>
+        <span class="type-serif-heading" style="font-size: var(--text-lg);">Wedding Admin</span>
       </div>
     </nav>
 
