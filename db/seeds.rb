@@ -105,21 +105,21 @@ puts "Seeding seating tables..."
 # a single seat at each rounded end (rect tables only).
 seating_layout = {
   welcome => [
-    { name: "T1", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: true,  has_right_end: true,  seat_count: 28, pos_x: 30, pos_y: 18, sort_order: 1 },
-    { name: "T2", shape: "rect",  top_seats: 16, bottom_seats: 16, has_left_end: true,  has_right_end: true,  seat_count: 34, pos_x: 30, pos_y: 50, sort_order: 2 },
-    { name: "T3", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: true,  has_right_end: true,  seat_count: 28, pos_x: 30, pos_y: 82, sort_order: 3 },
-    { name: "T4", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: true,  has_right_end: true,  seat_count: 28, pos_x: 70, pos_y: 18, sort_order: 4 },
-    { name: "T5", shape: "rect",  top_seats: 16, bottom_seats: 16, has_left_end: true,  has_right_end: true,  seat_count: 34, pos_x: 70, pos_y: 50, sort_order: 5 },
-    { name: "T6", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: true,  has_right_end: true,  seat_count: 28, pos_x: 70, pos_y: 82, sort_order: 6 }
+    { name: "T1", shape: "rect",  top_seats: 9, bottom_seats: 9, has_left_end: true,  has_right_end: true,  seat_count: 20, pos_x: 30, pos_y: 18, sort_order: 1 },
+    { name: "T2", shape: "rect",  top_seats: 9, bottom_seats: 9, has_left_end: true,  has_right_end: true,  seat_count: 20, pos_x: 30, pos_y: 50, sort_order: 2 },
+    { name: "T3", shape: "rect",  top_seats: 9, bottom_seats: 9, has_left_end: true,  has_right_end: true,  seat_count: 20, pos_x: 30, pos_y: 82, sort_order: 3 },
+    { name: "T4", shape: "rect",  top_seats: 9, bottom_seats: 9, has_left_end: true,  has_right_end: true,  seat_count: 20, pos_x: 70, pos_y: 18, sort_order: 4 },
+    { name: "T5", shape: "rect",  top_seats: 9, bottom_seats: 9, has_left_end: true,  has_right_end: true,  seat_count: 20, pos_x: 70, pos_y: 50, sort_order: 5 },
+    { name: "T6", shape: "rect",  top_seats: 9, bottom_seats: 9, has_left_end: true,  has_right_end: true,  seat_count: 20, pos_x: 70, pos_y: 82, sort_order: 6 }
   ],
   reception => [
-    { name: "T1", shape: "curve", top_seats: 12, bottom_seats: 12, has_left_end: false, has_right_end: false, seat_count: 24, pos_x: 50, pos_y: 50, sort_order: 1 },
-    { name: "T2", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 80, pos_y: 18, sort_order: 2 },
-    { name: "T3", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 80, pos_y: 50, sort_order: 3 },
-    { name: "T4", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 80, pos_y: 82, sort_order: 4 },
-    { name: "T5", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 20, pos_y: 18, sort_order: 5 },
-    { name: "T6", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 20, pos_y: 50, sort_order: 6 },
-    { name: "T7", shape: "rect",  top_seats: 13, bottom_seats: 13, has_left_end: false, has_right_end: false, seat_count: 26, pos_x: 20, pos_y: 82, sort_order: 7 }
+    { name: "T1", shape: "curve", top_seats: 10, bottom_seats: 10, has_left_end: false, has_right_end: false, seat_count: 20, pos_x: 50, pos_y: 50, sort_order: 1 },
+    { name: "T2", shape: "rect",  top_seats: 10, bottom_seats: 10, has_left_end: false, has_right_end: false, seat_count: 20, pos_x: 80, pos_y: 18, sort_order: 2 },
+    { name: "T3", shape: "rect",  top_seats: 10, bottom_seats: 10, has_left_end: false, has_right_end: false, seat_count: 20, pos_x: 80, pos_y: 50, sort_order: 3 },
+    { name: "T4", shape: "rect",  top_seats: 10, bottom_seats: 10, has_left_end: false, has_right_end: false, seat_count: 20, pos_x: 80, pos_y: 82, sort_order: 4 },
+    { name: "T5", shape: "rect",  top_seats: 10, bottom_seats: 10, has_left_end: false, has_right_end: false, seat_count: 20, pos_x: 20, pos_y: 18, sort_order: 5 },
+    { name: "T6", shape: "rect",  top_seats: 10, bottom_seats: 10, has_left_end: false, has_right_end: false, seat_count: 20, pos_x: 20, pos_y: 50, sort_order: 6 },
+    { name: "T7", shape: "rect",  top_seats: 10, bottom_seats: 10, has_left_end: false, has_right_end: false, seat_count: 20, pos_x: 20, pos_y: 82, sort_order: 7 }
   ]
 }
 
